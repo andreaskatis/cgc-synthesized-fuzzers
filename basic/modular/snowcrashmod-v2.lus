@@ -1,0 +1,39 @@
+node snowcrashexample(in, out1, out2, out3 : int) returns();
+var
+  ok1: bool;
+  ok2_0, ok2_1: bool;
+  ok3: bool;
+  type1,type2,type3: bool;
+ 
+let
+
+  type1 = 0 <= out1 and out1 <= 255;
+  type2 = 0 <= out2 and out2 <= 255;
+  type3 = 0 <= out3 and out3 <= 255;
+--%PROPERTY type1;
+--%PROPERTY type2;
+--%PROPERTY type3;
+
+  ok1 = out1 = (0 -> (if in = 1 then pre(out1) else (if in = 2 then 0 else ((pre(out1) + 1) mod 256))));
+--%PROPERTY ok1;
+
+  ok2_0 = true -> ((in = 1) => (out2 = pre(out2)));
+  ok2_1 = (out2 = 0) -> true;
+--%PROPERTY ok2_0;
+--%PROPERTY ok2_1;
+
+  ok3 = out3 = if in = 1 then 0 -> pre(out3) else 
+                 1*(((out1 div   1) + (out2 div   1)) mod 2) +
+                 2*(((out1 div   2) + (out2 div   2)) mod 2) +
+                 4*(((out1 div   4) + (out2 div   4)) mod 2) +
+                 8*(((out1 div   8) + (out2 div   8)) mod 2) +
+                16*(((out1 div  16) + (out2 div  16)) mod 2) +
+                32*(((out1 div  32) + (out2 div  32)) mod 2) +
+                64*(((out1 div  64) + (out2 div  64)) mod 2) +
+               128*(((out1 div 128) + (out2 div 128)) mod 2);
+
+--%PROPERTY ok3;
+
+--%REALIZABLE in;
+
+tel;
