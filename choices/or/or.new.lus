@@ -1,0 +1,73 @@
+function generateRandomValue(
+  lflag : bool;
+  uflag : bool;
+  lbound : real;
+  ubound : real
+) returns (
+  randomValue : real
+);
+
+
+node Skolem_main(
+  in : real
+) returns (
+  _aeval_tmp_rand_real_1 : real;
+  _aeval_tmp_min_0 : real;
+  out : real
+);
+var
+  init : int;
+let
+  _aeval_tmp_min_0 = (if (100.0 > ((-1.0) * (10.0 + ((-1.0) * in)))) then ((-1.0) * (10.0 + ((-1.0) * in))) else 100.0);
+
+  _aeval_tmp_rand_real_1 = generateRandomValue(false, false, (-100.0), _aeval_tmp_min_0);
+
+  out = _aeval_tmp_rand_real_1;
+
+  init = (0 -> 1);
+
+  assert (((-100.0) < _aeval_tmp_rand_real_1) and (_aeval_tmp_rand_real_1 < _aeval_tmp_min_0));
+
+tel;
+
+node __CONTRACT(
+  in : real;
+  out : real
+) returns (
+  __ASSERTS : bool
+);
+var
+  ok1 : bool;
+  ok2 : bool;
+let
+  ok1 = ((out > (in + 10.0)) or (out < (in - 10.0)));
+
+  ok2 = (((-100.0) < out) and (out < 100.0));
+
+  __ASSERTS = (true and (((-10.0) < in) and (in < 10.0)));
+
+  --%PROPERTY ok1;
+  --%PROPERTY ok2;
+
+tel;
+
+node __TOPLEVEL(
+  in : real
+) returns (
+  _aeval_tmp_rand_real_1 : real;
+  _aeval_tmp_min_0 : real;
+  out : real
+);
+var
+  __ASSERTS : bool;
+let
+  --%MAIN;
+  _aeval_tmp_rand_real_1, _aeval_tmp_min_0, out = Skolem_main(in);
+
+  __ASSERTS = __CONTRACT(in, out);
+
+  assert __ASSERTS;
+
+  assert (((-100.0) < _aeval_tmp_rand_real_1) and (_aeval_tmp_rand_real_1 < _aeval_tmp_min_0));
+
+tel;

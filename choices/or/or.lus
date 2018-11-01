@@ -1,0 +1,15 @@
+node main(in: int; out: int) returns ();
+var
+  ok1,ok2: bool;
+let
+
+  assert(-10 < in and in < 10);
+
+  ok1 = (out > in + 10) or (out < in - 10);
+  ok2 = (-100 < out and out < 100);
+
+  --%PROPERTY ok1;
+  --%PROPERTY ok2;
+
+  --%REALIZABLE;
+tel
