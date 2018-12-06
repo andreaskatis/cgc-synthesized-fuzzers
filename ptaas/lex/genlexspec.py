@@ -19,7 +19,7 @@ Inputs:
         {0}
 
 Outputs:
-	in : int
+	in : {in: int | 0 <= in and in <= 255 }
 
 State:
 	st : int
@@ -624,7 +624,7 @@ def main():
                         action='store_true',
                         help="Add a randomization input")
     args = parser.parse_args()
-    rflag = 'r : real' if args.random else ''    
+    rflag = 'r : {r: real | -1.0 <= r and r <= 1.0}' if args.random else ''    
     print(SPEAR_SPEC.format(rflag,generateRequirements(args.random,0,1,ACCEPTING,DELTA)))
 
 if __name__ == "__main__":

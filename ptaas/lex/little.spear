@@ -13,7 +13,7 @@ Patterns:
 Inputs:
 
 Outputs:
-	i : int
+	i : {i : int | 0 <= i and i <= 255}
 	
 
 State:
