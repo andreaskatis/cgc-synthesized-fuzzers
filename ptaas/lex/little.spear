@@ -1,0 +1,43 @@
+Specification little
+
+Imports:
+
+Units:
+
+Types:
+
+Constants:
+
+Patterns:
+
+Inputs:
+
+Outputs:
+	i : int
+	
+
+State:
+	st : int
+
+Macros:
+	pre_st : int = previous st with initial value 0
+
+Assumptions:
+
+Requirements:
+	st0_1 : ((pre_st ==  0) implies ((i == 1) implies (st == 1)))
+	st0_2 : ((pre_st ==  0) implies ((i == 2) implies (st == 2)))
+        st0_n : ((pre_st ==  0) implies ((i < 1) or (i > 2)) implies (st == -1)))
+	stn_1 : ((pre_st == -1) implies ((i == 1) implies (st == 1)))
+	stn_2 : ((pre_st == -1) implies ((i == 2) implies (st == 2)))
+	stn_n : ((pre_st == -1) implies ((i < 1) or (i > 2)) implies (st == -1))
+        st1_1 : ((pre_st ==  1) implies ((i == 1) implies (st == 1)))
+        st1_2 : ((pre_st ==  1) implies ((i == 2) implies (st == 2)))
+        st1_n : ((pre_st ==  1) implies ((i < 1) or (i > 2)) implies (st == -1)))
+        st2_0 : ((pre_st ==  2) implies ((i == 0) implies (st == 0)))
+        st2_1 : ((pre_st ==  2) implies ((i == 1) implies (st == 1)))
+        st2_2 : ((pre_st ==  2) implies ((i == 2) implies (st == 2)))
+        st2_n : ((pre_st ==  2) implies ((i < 0) or (i > 2)) implies (st == -1)))
+
+Properties:
+
