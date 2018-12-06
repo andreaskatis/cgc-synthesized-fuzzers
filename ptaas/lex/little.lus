@@ -157,52 +157,8 @@ var
   USER_st2_1 : bool;
   USER_st2_2 : bool;
   USER_st2_n : bool;
-  st0_1_ufc_c0 : bool;
-  st0_1_ufc_c1 : bool;
-  st0_1_ufc_c2 : bool;
-  st0_2_ufc_c0 : bool;
-  st0_2_ufc_c1 : bool;
-  st0_2_ufc_c2 : bool;
-  st0_n_ufc_c0 : bool;
-  st0_n_ufc_c1 : bool;
-  st0_n_ufc_c2 : bool;
-  st0_n_ufc_c3 : bool;
-  stn_1_ufc_c0 : bool;
-  stn_1_ufc_c1 : bool;
-  stn_1_ufc_c2 : bool;
-  stn_2_ufc_c0 : bool;
-  stn_2_ufc_c1 : bool;
-  stn_2_ufc_c2 : bool;
-  stn_n_ufc_c0 : bool;
-  stn_n_ufc_c1 : bool;
-  stn_n_ufc_c2 : bool;
-  stn_n_ufc_c3 : bool;
-  st1_1_ufc_c0 : bool;
-  st1_1_ufc_c1 : bool;
-  st1_1_ufc_c2 : bool;
-  st1_2_ufc_c0 : bool;
-  st1_2_ufc_c1 : bool;
-  st1_2_ufc_c2 : bool;
-  st1_n_ufc_c0 : bool;
-  st1_n_ufc_c1 : bool;
-  st1_n_ufc_c2 : bool;
-  st1_n_ufc_c3 : bool;
-  st2_0_ufc_c0 : bool;
-  st2_0_ufc_c1 : bool;
-  st2_0_ufc_c2 : bool;
-  st2_1_ufc_c0 : bool;
-  st2_1_ufc_c1 : bool;
-  st2_1_ufc_c2 : bool;
-  st2_2_ufc_c0 : bool;
-  st2_2_ufc_c1 : bool;
-  st2_2_ufc_c2 : bool;
-  st2_n_ufc_c0 : bool;
-  st2_n_ufc_c1 : bool;
-  st2_n_ufc_c2 : bool;
-  st2_n_ufc_c3 : bool;
   USER_i_satisfies_predicate : bool;
   counter : int;
-  all_properties : bool;
 let
   --%MAIN;
   counter = (1 -> ((pre counter) + 1));
@@ -235,144 +191,12 @@ let
 
   USER_st2_n = ((USER_pre_st = 2) => (((USER_i < 0) or (USER_i > 2)) => (USER_st = (-1))));
 
-  constraints = historically((USER_st0_1 and (USER_st0_2 and (USER_st0_n and (USER_stn_1 and (USER_stn_2 and (USER_stn_n and (USER_st1_1 and (USER_st1_2 and (USER_st1_n and (USER_st2_0 and (USER_st2_1 and (USER_st2_2 and USER_st2_n)))))))))))));
-
-  all_properties = USER_i_satisfies_predicate;
-
-  st0_1_ufc_c0 = (constraints => (not ((not (USER_pre_st = 0)) and (not ((USER_i = 1) => (USER_st = 1))))));
-
-  st0_1_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 0))) and ((not (USER_i = 1)) and (not (USER_st = 1))))));
-
-  st0_1_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 0))) and ((not (not (USER_i = 1))) and (USER_st = 1)))));
-
-  st0_2_ufc_c0 = (constraints => (not ((not (USER_pre_st = 0)) and (not ((USER_i = 2) => (USER_st = 2))))));
-
-  st0_2_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 0))) and ((not (USER_i = 2)) and (not (USER_st = 2))))));
-
-  st0_2_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 0))) and ((not (not (USER_i = 2))) and (USER_st = 2)))));
-
-  st0_n_ufc_c0 = (constraints => (not ((not (USER_pre_st = 0)) and (not (((USER_i < 1) or (USER_i > 2)) => (USER_st = (-1)))))));
-
-  st0_n_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 0))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st0_n_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 0))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st0_n_ufc_c3 = (constraints => (not ((not (not (USER_pre_st = 0))) and ((not (not ((USER_i < 1) or (USER_i > 2)))) and (USER_st = (-1))))));
-
-  stn_1_ufc_c0 = (constraints => (not ((not (USER_pre_st = (-1))) and (not ((USER_i = 1) => (USER_st = 1))))));
-
-  stn_1_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and ((not (USER_i = 1)) and (not (USER_st = 1))))));
-
-  stn_1_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and ((not (not (USER_i = 1))) and (USER_st = 1)))));
-
-  stn_2_ufc_c0 = (constraints => (not ((not (USER_pre_st = (-1))) and (not ((USER_i = 2) => (USER_st = 2))))));
-
-  stn_2_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and ((not (USER_i = 2)) and (not (USER_st = 2))))));
-
-  stn_2_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and ((not (not (USER_i = 2))) and (USER_st = 2)))));
-
-  stn_n_ufc_c0 = (constraints => (not ((not (USER_pre_st = (-1))) and (not (((USER_i < 1) or (USER_i > 2)) => (USER_st = (-1)))))));
-
-  stn_n_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  stn_n_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  stn_n_ufc_c3 = (constraints => (not ((not (not (USER_pre_st = (-1)))) and ((not (not ((USER_i < 1) or (USER_i > 2)))) and (USER_st = (-1))))));
-
-  st1_1_ufc_c0 = (constraints => (not ((not (USER_pre_st = 1)) and (not ((USER_i = 1) => (USER_st = 1))))));
-
-  st1_1_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 1))) and ((not (USER_i = 1)) and (not (USER_st = 1))))));
-
-  st1_1_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 1))) and ((not (not (USER_i = 1))) and (USER_st = 1)))));
-
-  st1_2_ufc_c0 = (constraints => (not ((not (USER_pre_st = 1)) and (not ((USER_i = 2) => (USER_st = 2))))));
-
-  st1_2_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 1))) and ((not (USER_i = 2)) and (not (USER_st = 2))))));
-
-  st1_2_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 1))) and ((not (not (USER_i = 2))) and (USER_st = 2)))));
-
-  st1_n_ufc_c0 = (constraints => (not ((not (USER_pre_st = 1)) and (not (((USER_i < 1) or (USER_i > 2)) => (USER_st = (-1)))))));
-
-  st1_n_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 1))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st1_n_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 1))) and (((not (USER_i < 1)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st1_n_ufc_c3 = (constraints => (not ((not (not (USER_pre_st = 1))) and ((not (not ((USER_i < 1) or (USER_i > 2)))) and (USER_st = (-1))))));
-
-  st2_0_ufc_c0 = (constraints => (not ((not (USER_pre_st = 2)) and (not ((USER_i = 0) => (USER_st = 0))))));
-
-  st2_0_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (USER_i = 0)) and (not (USER_st = 0))))));
-
-  st2_0_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (not (USER_i = 0))) and (USER_st = 0)))));
-
-  st2_1_ufc_c0 = (constraints => (not ((not (USER_pre_st = 2)) and (not ((USER_i = 1) => (USER_st = 1))))));
-
-  st2_1_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (USER_i = 1)) and (not (USER_st = 1))))));
-
-  st2_1_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (not (USER_i = 1))) and (USER_st = 1)))));
-
-  st2_2_ufc_c0 = (constraints => (not ((not (USER_pre_st = 2)) and (not ((USER_i = 2) => (USER_st = 2))))));
-
-  st2_2_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (USER_i = 2)) and (not (USER_st = 2))))));
-
-  st2_2_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (not (USER_i = 2))) and (USER_st = 2)))));
-
-  st2_n_ufc_c0 = (constraints => (not ((not (USER_pre_st = 2)) and (not (((USER_i < 0) or (USER_i > 2)) => (USER_st = (-1)))))));
-
-  st2_n_ufc_c1 = (constraints => (not ((not (not (USER_pre_st = 2))) and (((not (USER_i < 0)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st2_n_ufc_c2 = (constraints => (not ((not (not (USER_pre_st = 2))) and (((not (USER_i < 0)) and (not (USER_i > 2))) and (not (USER_st = (-1)))))));
-
-  st2_n_ufc_c3 = (constraints => (not ((not (not (USER_pre_st = 2))) and ((not (not ((USER_i < 0) or (USER_i > 2)))) and (USER_st = (-1))))));
-
   USER_i_satisfies_predicate = (constraints => ((0 <= USER_i) and (USER_i <= 255)));
 
-  --%PROPERTY st0_1_ufc_c0;
-  --%PROPERTY st0_1_ufc_c1;
-  --%PROPERTY st0_1_ufc_c2;
-  --%PROPERTY st0_2_ufc_c0;
-  --%PROPERTY st0_2_ufc_c1;
-  --%PROPERTY st0_2_ufc_c2;
-  --%PROPERTY st0_n_ufc_c0;
-  --%PROPERTY st0_n_ufc_c1;
-  --%PROPERTY st0_n_ufc_c2;
-  --%PROPERTY st0_n_ufc_c3;
-  --%PROPERTY stn_1_ufc_c0;
-  --%PROPERTY stn_1_ufc_c1;
-  --%PROPERTY stn_1_ufc_c2;
-  --%PROPERTY stn_2_ufc_c0;
-  --%PROPERTY stn_2_ufc_c1;
-  --%PROPERTY stn_2_ufc_c2;
-  --%PROPERTY stn_n_ufc_c0;
-  --%PROPERTY stn_n_ufc_c1;
-  --%PROPERTY stn_n_ufc_c2;
-  --%PROPERTY stn_n_ufc_c3;
-  --%PROPERTY st1_1_ufc_c0;
-  --%PROPERTY st1_1_ufc_c1;
-  --%PROPERTY st1_1_ufc_c2;
-  --%PROPERTY st1_2_ufc_c0;
-  --%PROPERTY st1_2_ufc_c1;
-  --%PROPERTY st1_2_ufc_c2;
-  --%PROPERTY st1_n_ufc_c0;
-  --%PROPERTY st1_n_ufc_c1;
-  --%PROPERTY st1_n_ufc_c2;
-  --%PROPERTY st1_n_ufc_c3;
-  --%PROPERTY st2_0_ufc_c0;
-  --%PROPERTY st2_0_ufc_c1;
-  --%PROPERTY st2_0_ufc_c2;
-  --%PROPERTY st2_1_ufc_c0;
-  --%PROPERTY st2_1_ufc_c1;
-  --%PROPERTY st2_1_ufc_c2;
-  --%PROPERTY st2_2_ufc_c0;
-  --%PROPERTY st2_2_ufc_c1;
-  --%PROPERTY st2_2_ufc_c2;
-  --%PROPERTY st2_n_ufc_c0;
-  --%PROPERTY st2_n_ufc_c1;
-  --%PROPERTY st2_n_ufc_c2;
-  --%PROPERTY st2_n_ufc_c3;
-  --%PROPERTY USER_i_satisfies_predicate;
-  --%PROPERTY all_properties;
+  constraints = historically((USER_st0_1 and (USER_st0_2 and (USER_st0_n and (USER_stn_1 and (USER_stn_2 and (USER_stn_n and (USER_st1_1 and (USER_st1_2 and (USER_st1_n and (USER_st2_0 and (USER_st2_1 and (USER_st2_2 and USER_st2_n)))))))))))));
 
-  --%IVC USER_st0_1, USER_st0_2, USER_st0_n, USER_stn_1, USER_stn_2, USER_stn_n, USER_st1_1, USER_st1_2, USER_st1_n, USER_st2_0, USER_st2_1, USER_st2_2, USER_st2_n;
+  --%PROPERTY constraints;
+
+  --%REALIZABLE ;
 
 tel;
