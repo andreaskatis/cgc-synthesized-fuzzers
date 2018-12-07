@@ -19,7 +19,7 @@ Inputs:
         {0}
 
 Outputs:
-	in : {in: int | 0 <= in and in <= 255 }
+	in : {{in: int | 0 <= in and in <= 255 }}
 
 State:
 	st : int
@@ -596,7 +596,7 @@ def generateRequirements(rand,start,fail,accepting,delta):
     ## Give the failure state the same transitions as the start state
     delta[fail] = delta[start]
     delta = [ unfailingArcs(fail,delta[st]) for st in range(len(delta)) ]
-    res = ''
+    res = '  intype : (0 <= in and in <= 255)\n'
     for (st,line) in enumerate(delta):
         nset = set([fail])
         d = len(line)
@@ -625,7 +625,8 @@ def main():
                         help="Add a randomization input")
     args = parser.parse_args()
     rflag = 'r : {r: real | -1.0 <= r and r <= 1.0}' if args.random else ''    
-    print(SPEAR_SPEC.format(rflag,generateRequirements(args.random,0,1,ACCEPTING,DELTA)))
+    body = generateRequirements(args.random,0,1,ACCEPTING,DELTA)
+    print(SPEAR_SPEC.format(rflag,body))
 
 if __name__ == "__main__":
     sys.exit(main())
