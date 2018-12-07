@@ -144,6 +144,7 @@ node USER_little(
 );
 var
   USER_pre_st : int;
+  USER_otype : bool;
   USER_st0_1 : bool;
   USER_st0_2 : bool;
   USER_st0_n : bool;
@@ -164,6 +165,8 @@ let
   counter = (1 -> ((pre counter) + 1));
 
   USER_pre_st = (0 -> (pre USER_st));
+
+  USER_otype = ((0 <= USER_i) and (USER_i <= 255));
 
   USER_st0_1 = ((USER_pre_st = 0) => ((USER_i = 1) => (USER_st = 1)));
 
@@ -193,7 +196,7 @@ let
 
   USER_i_satisfies_predicate = (constraints => ((0 <= USER_i) and (USER_i <= 255)));
 
-  constraints = historically((USER_st0_1 and (USER_st0_2 and (USER_st0_n and (USER_stn_1 and (USER_stn_2 and (USER_stn_n and (USER_st1_1 and (USER_st1_2 and (USER_st1_n and (USER_st2_0 and (USER_st2_1 and (USER_st2_2 and USER_st2_n)))))))))))));
+  constraints = historically((USER_otype and (USER_st0_1 and (USER_st0_2 and (USER_st0_n and (USER_stn_1 and (USER_stn_2 and (USER_stn_n and (USER_st1_1 and (USER_st1_2 and (USER_st1_n and (USER_st2_0 and (USER_st2_1 and (USER_st2_2 and USER_st2_n))))))))))))));
 
   --%PROPERTY constraints;
 
