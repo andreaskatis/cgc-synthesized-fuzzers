@@ -28,7 +28,7 @@ Macros:
 Assumptions:
 
 Requirements:
-  intype : (0 <= in and in <= 255)
+  intype : (0 <= ch and ch <= 255)
   req_0_99: ((pre_st == 0) implies ((ch == 99) implies (st == 2)))
   req_0_112: ((pre_st == 0) implies ((ch == 112) implies (st == 3)))
   req_0_113: ((pre_st == 0) implies ((ch == 113) implies (st == 4)))

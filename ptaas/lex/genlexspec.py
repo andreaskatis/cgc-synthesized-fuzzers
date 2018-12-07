@@ -598,7 +598,7 @@ def generateRequirements(rand,start,fail,accepting,delta):
     ## Give the failure state the same transitions as the start state
     delta[fail] = delta[start]
     delta = [ unfailingArcs(fail,delta[st]) for st in range(len(delta)) ]
-    res = '  intype : (0 <= in and in <= 255)\n'
+    res = '  intype : (0 <= ch and ch <= 255)\n'
     for (st,line) in enumerate(delta):
         nset = set([fail])
         d = len(line)
