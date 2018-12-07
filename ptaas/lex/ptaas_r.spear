@@ -6,16 +6,18 @@ Imports:
 Units:
 
 Types:
+       byte: {i: int  |    0 <= i and i <= 255}
+       rand: {r: real | -1.0 <= r and r <= 1.0}
 
 Constants:
 
 Patterns:
 
 Inputs:
-        r : {r: real | -1.0 <= r and r <= 1.0}
+        r : rand
 
 Outputs:
-	in : {in: int | 0 <= in and in <= 255 }
+	in : byte
 
 State:
 	st : int
