@@ -25,6 +25,7 @@ Macros:
 Assumptions:
 
 Requirements:
+    otype : (0 <= i) and (i <= 255)
 	st0_1 : ((pre_st ==  0) implies ((i == 1) implies (st == 1)))
 	st0_2 : ((pre_st ==  0) implies ((i == 2) implies (st == 2)))
     st0_n : ((pre_st ==  0) implies ((i < 1) or (i > 2)) implies (st == -1))
