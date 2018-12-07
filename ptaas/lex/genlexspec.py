@@ -3,23 +3,25 @@ import sys
 import argparse
 
 SPEAR_SPEC = '''
-Specification ptaas
+Specification ptaas{0}
 
 Imports:
 
 Units:
 
 Types:
+       byte: {{i: int  |    0 <= i and i <= 255}}
+       rand: {{r: real | -1.0 <= r and r <= 1.0}}
 
 Constants:
 
 Patterns:
 
 Inputs:
-        {0}
+        {1}
 
 Outputs:
-	in : {{in: int | 0 <= in and in <= 255 }}
+	ch : byte
 
 State:
 	st : int
@@ -30,7 +32,7 @@ Macros:
 Assumptions:
 
 Requirements:
-{1}
+{2}
 
 Properties:
 
@@ -604,9 +606,9 @@ def generateRequirements(rand,start,fail,accepting,delta):
             if rand:
                 plow  = (n * 1.0)/(d)
                 phigh = (n + 1.0)/(d)
-                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((in == {1}) and (st == {2}))))\n'.format(st,char,nxt,plow,phigh)
+                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}) and (st == {2}))))\n'.format(st,char,nxt,plow,phigh)
             else:
-                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((in == {1}) implies (st == {2})))\n'.format(st,char,nxt)
+                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((ch == {1}) implies (st == {2})))\n'.format(st,char,nxt)
             nset.add(nxt)
         if rand:
             for (n,(char,nxt)) in enumerate(line):
@@ -624,9 +626,10 @@ def main():
                         action='store_true',
                         help="Add a randomization input")
     args = parser.parse_args()
-    rflag = 'r : {r: real | -1.0 <= r and r <= 1.0}' if args.random else ''    
+    rflag = 'r : rand' if args.random else ''    
+    prefix = '_r' if args.random else ''
     body = generateRequirements(args.random,0,1,ACCEPTING,DELTA)
-    print(SPEAR_SPEC.format(rflag,body))
+    print(SPEAR_SPEC.format(prefix,rflag,body))
 
 if __name__ == "__main__":
     sys.exit(main())
