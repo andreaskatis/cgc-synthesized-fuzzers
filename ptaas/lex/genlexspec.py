@@ -11,11 +11,15 @@ Units:
 
 Types:
        byte: {{i: int  |    0 <= i and i <= 255}}
-       rand: {{r: real | -1.0 <= r and r <= 1.0}}
+       rand: {{r: real | -1.0 <= r and r <  1.0}}
 
 Constants:
 
 Patterns:
+	pattern preState(st: int, st0: int) returns (x: bool)
+	let
+	  x = previous (st == st0) with initial value false
+	tel
 
 Inputs:
         {1}
@@ -27,15 +31,16 @@ State:
 	st : int
 
 Macros:
-	pre_st : int = previous st with initial value 0
 
 Assumptions:
 
 Requirements:
+  st0    : initially(st == 0)
+  intype : (0 <= ch and ch <= 255)
 {2}
 
 Properties:
-
+  run observe : historically(0.0 <= r) implies (false -> (st == 0))
 '''
 
 ACCEPTING = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,
@@ -598,7 +603,7 @@ def generateRequirements(rand,start,fail,accepting,delta):
     ## Give the failure state the same transitions as the start state
     delta[fail] = delta[start]
     delta = [ unfailingArcs(fail,delta[st]) for st in range(len(delta)) ]
-    res = '  intype : (0 <= ch and ch <= 255)\n'
+    res = ""
     for (st,line) in enumerate(delta):
         nset = set([fail])
         d = len(line)
@@ -606,17 +611,17 @@ def generateRequirements(rand,start,fail,accepting,delta):
             if rand:
                 plow  = (n * 1.0)/(d)
                 phigh = (n + 1.0)/(d)
-                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}) and (st == {2}))))\n'.format(st,char,nxt,plow,phigh)
+                res += '  req_{0}_{1}: (preState(st,{0}) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}) and (st == {2}))))\n'.format(st,char,nxt,plow,phigh)
             else:
-                res += '  req_{0}_{1}: ((pre_st == {0}) implies ((ch == {1}) implies (st == {2})))\n'.format(st,char,nxt)
+                res += '  req_{0}_{1}: (preState(st,{0}) implies ((ch == {1}) implies (st == {2})))\n'.format(st,char,nxt)
             nset.add(nxt)
         if rand:
             for (n,(char,nxt)) in enumerate(line):
                 plow  = (- (n * 1.0)/(d)) + 0
                 phigh = (- (n + 1.0)/(d)) + 0
-                res += '  nreq_{0}_{1}: ((pre_st == {0}) implies ((({4:.3f} <= r) and (r < {3:.3f})) implies (st == {2})))\n'.format(st,char,nxt,plow,phigh)
+                res += '  nreq_{0}_{1}: (preState(st,{0}) implies ((({4:.3f} <= r) and (r < {3:.3f})) implies (st == {2})))\n'.format(st,char,nxt,plow,phigh)
         else:
-            res += '  req_{0}: ((pre_st == {0}) implies ({1}))\n'.format(st,' or '.join(['(st == {0})'.format(nxt) for nxt in nset]))
+            res += '  req_{0}: (preState(st,{0}) implies ({1}))\n'.format(st,' or '.join(['(st == {0})'.format(nxt) for nxt in nset]))
     return res
 
 def main():
