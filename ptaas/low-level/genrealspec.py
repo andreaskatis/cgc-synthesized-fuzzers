@@ -3,44 +3,47 @@ import sys
 import argparse
 
 SPEAR_SPEC = '''
-Specification ptaas{0}
+Specification ptaas
 
 Imports:
 
 Units:
 
 Types:
-       byte: {{i: int  |    0 <= i and i <= 255}}
+       byte: {{i: real |  0.0 <= i and i <= 255.0}}
        rand: {{r: real | -1.0 <= r and r <  1.0}}
 
 Constants:
 
 Patterns:
-	pattern preState(st: int, st0: int) returns (x: bool)
+
+	pattern seq(x: bool, y: bool) returns (z: bool)
 	let
-	  x = previous (st == st0) with initial value false
+	  z = ((false -> once(x)) and y) or (false -> (previous z))
 	tel
 
 Inputs:
+        {0}
         {1}
 
 Outputs:
-	ch : byte
+   next_st : real
+	{2}
 
 State:
-	st : int
+	st : real
 
 Macros:
 
 Assumptions:
 
 Requirements:
-  st0    : initially(st == 0)
-  intype : (0 <= ch and ch <= 255)
-{2}
+   st_req       : st == previous next_st with initial value 0.0
+   ch_type      : (0.0 <= ch and ch <= 255.0)
+{3}
 
 Properties:
-  run observe : historically(0.0 <= r) implies (false -> (st == 0))
+{4}
 '''
 
 ACCEPTING = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,
@@ -594,47 +597,80 @@ DELTA = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 
 ## ;; {state : [(input . next) .. ]
 
-def unfailingArcs(fail,nlist):
-    return [(char,st) for (char,st) in enumerate(nlist) if (st != fail)]
+def crlf(x):
+    return 10 if (x == 13) else x
 
-def generateRequirements(rand,start,fail,accepting,delta):
+def unfailingArcs(fail,nlist):
+    return [(crlf(char),st) for (char,st) in enumerate(nlist) if (st != fail)]
+
+def generateRequirements(xin,start,fail,accepting,delta):
     ## remap the accepting state to the start state
+    ##
+    ## So technically the accepting states may be 're-entrant' ..
+    ## which is to say, they may continue accepting new
+    ## characters while staying in the accepting state.
+    ##
     delta = [[st if (accepting[st] != 1) else start for st in line] for line in delta ]
-    ## Give the failure state the same transitions as the start state
-    delta[fail] = delta[start]
     delta = [ unfailingArcs(fail,delta[st]) for st in range(len(delta)) ]
-    res = ""
+    delta[fail] = []
+    #
+    # for (st,line) in enumerate(delta):
+    #     for (char,nxt) in line:
+    #         print(format("## {} {}({}) -> {}".format(st,chr(char),char,nxt)))
+    #
+    spec = ""
+    prop = ""
+    ## The failing state to start state transition always requires a \n
     for (st,line) in enumerate(delta):
-        nset = set([fail])
+        cset = set()
         d = len(line)
         for (n,(char,nxt)) in enumerate(line):
-            if rand:
+            if xin:
                 plow  = (n * 1.0)/(d)
                 phigh = (n + 1.0)/(d)
-                res += '  req_{0}_{1}: (preState(st,{0}) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}) and (st == {2}))))\n'.format(st,char,nxt,plow,phigh)
+                spec += '   req_{0:04d}_{1:04d}: ((st == {0}.0) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}.0) and (next_st == {2}.0))))\n'.format(st,char,nxt,plow,phigh)
             else:
-                res += '  req_{0}_{1}: (preState(st,{0}) implies ((ch == {1}) implies (st == {2})))\n'.format(st,char,nxt)
-            nset.add(nxt)
-        if rand:
-            for (n,(char,nxt)) in enumerate(line):
-                plow  = (- (n * 1.0)/(d)) + 0
-                phigh = (- (n + 1.0)/(d)) + 0
-                res += '  nreq_{0}_{1}: (preState(st,{0}) implies ((({4:.3f} <= r) and (r < {3:.3f})) implies (st == {2})))\n'.format(st,char,nxt,plow,phigh)
+                spec += '   req_{0:04d}_{1:04d}: ((st == {0}.0) implies ((ch == {1}.0) implies (next_st == {2}.0)))\n'.format(st,char,nxt)
+            prop += '  prop_{curr:04d}_{char:04d} observe : seq(((st == {curr}.0) and (ch == {char}.0)),(next_st == {start}.0)) and not(once(st == {fail}.0))\n'.format(curr=st,char=char,fail=fail,start=start)
+            prop += ' nprop_{curr:04d}_{char:04d} observe : seq(seq(((st == {curr}.0) and (ch == {char}.0)),(st == {fail}.0)),(next_st == {start}.0))\n'.format(curr=st,char=char,fail=fail,start=start)
+            cset.add(char)
+        if (st != fail):
+            if xin:
+                d += 1
+                for (n,(char,nxt)) in enumerate(line):
+                    plow  = (- (n * 1.0)/(d)) + 0
+                    phigh = (- (n + 1.0)/(d)) + 0
+                    spec += '  nreq_{0:04d}_{1:04d}: ((st == {0}.0) implies ((({4:.3f} <= r) and (r < {3:.3f})) implies (next_st == {2}.0)))\n'.format(st,char,nxt,plow,phigh)
+                plow  = (- (d - 1.0)/(d)) + 0
+                phigh = -1.0
+                spec += '  nreq_{0:04d}     : ((st == {0}.0) implies ((({4:.3f} <= r) and (r < {3:.3f})) implies (next_st == {2}.0)))\n'.format(st,256,fail,plow,phigh)
+            else:
+                if cset:
+                    spec += '   req_{0:04d}     : ((st == {0}.0) and (not ({1}))) implies (next_st == {2}.0)\n'.format(st,' or '.join(['(ch == {0}.0)'.format(c) for c in cset]),fail)
         else:
-            res += '  req_{0}: (preState(st,{0}) implies ({1}))\n'.format(st,' or '.join(['(st == {0})'.format(nxt) for nxt in nset]))
-    return res
+            if xin:
+                spec += '  areq_{0:04d}_{1:04d}: ((st == {0}.0) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}.0) and (next_st == {2}.0))))\n'.format(fail,10,start,0.0,1.0)
+                spec += '  breq_{0:04d}_{1:04d}: ((st == {0}.0) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((ch == {1}.0) and (next_st == {2}.0))))\n'.format(fail,10,start,0.0,1.0)
+                spec += '  nreq_{0:04d}_{1:04d}: ((st == {0}.0) implies ((({3:.3f} <= r) and (r < {4:.3f})) implies ((next_st == {2}.0))))\n'.format(fail,10,fail,-1.0,0.0)
+            else:
+                spec += '   req_{0:04d}_{1:04d}: ((st == {0}.0) implies ((ch == {1}.0) implies (next_st == {2}.0)))\n'.format(fail,10,start)
+                spec += '  nreq_{0:04d}_{1:04d}: ((st == {0}.0) implies ((ch <> {1}.0) implies (next_st == {2}.0)))\n'.format(fail,10,fail)
+    return (spec,prop)
 
 def main():
     global DELTA
     parser = argparse.ArgumentParser(description="Generate LEXER Specicification")
-    parser.add_argument('-r', '--random',
+    parser.add_argument('-i', '--input',
                         action='store_true',
-                        help="Add a randomization input")
+                        help="Control behavior with an additional input")
+    parser.add_argument('-r', '--real',
+                        action='store_true',
+                        help="Use only real-valued signals")
     args = parser.parse_args()
-    rflag = 'r : rand' if args.random else ''    
-    prefix = '_r' if args.random else ''
-    body = generateRequirements(args.random,0,1,ACCEPTING,DELTA)
-    print(SPEAR_SPEC.format(prefix,rflag,body))
+    rflag = 'r : rand' if args.input else ''
+    (chin,chout) = ('','ch : byte') if args.input else ('ch : byte','')
+    (body,prop) = generateRequirements(args.input,0,1,ACCEPTING,DELTA)
+    print(SPEAR_SPEC.format(rflag,chin,chout,body,prop))
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -28,7 +28,7 @@ class c_msg(Structure):
                 ("emission" , c_rgb)
             ]
 
-_libptass = CDLL('libptaas.so')
+_libptass = CDLL('../lib/libptaas.so')
 _libptass.step.restype  = c_msg
 
 def cstep():
