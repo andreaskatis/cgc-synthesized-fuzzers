@@ -53,9 +53,14 @@ State:
 Macros:
 
 Assumptions:
+  rvalue_bound_2 : (((   0 <= rindex) and (rindex <= 1023))                => (rvalue <= VTYPE_BOUND0))
+  rvalue_bound_3 : (((1024 <= rindex) and (rindex <= 2047))                => (rvalue <= VTYPE_BOUND0))
+  rvalue_bound_4 : (((2048 <= rindex) and (rindex <= 4095))                => (rvalue <= VTYPE_BOUND1))
+  rvalue_bound_5 : (((4096 <= rindex) and (rindex <= 8191))                => (rvalue <= VTYPE_BOUND2))
   
 Requirements:
-
+  xact_bound     : (0 <= xact and xact <= 3)
+  xindex_bound   : (0 <= xindex and xindex <= MAX_INDEX)
   xvalue_bound_0 : (0 <= xvalue and xvalue <= MAX_VTYPE)
   xvalue_bound_1 : (((   0 <= xindex) and (xindex <=  799) and (xact < 2)) => (xvalue <= 1))
   xvalue_bound_2 : (((   0 <= xindex) and (xindex <= 1023))                => (xvalue <= VTYPE_BOUND0))
