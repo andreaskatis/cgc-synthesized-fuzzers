@@ -1,0 +1,78 @@
+Specification stopR
+
+Imports:
+
+Units:
+
+Types:
+       quad : {i: real  |    0.0 <= i and i <= 3.0}
+       hexa : {i: real  |    0.0 <= i and i <= 5.0}
+       itype: {i: real  |    0.0 <= i and i <= MAX_INDEX}
+       vtype: {i: real  |    0.0 <= i and i <= MAX_VTYPE}
+       register: vtype[16]
+       
+Constants:
+       MAX_INDEX    : real = 8191.0
+       MAX_VTYPE    : real = 2147483647.0
+       VTYPE_BOUND0 : real = 65535.0
+       VTYPE_BOUND1 : real = 16777215.0
+       VTYPE_BOUND2 : real = 2147483647.0
+       
+       XACT_COIL_STATUS    : real = 0.0
+       XACT_INPUT_STATUS   : real = 1.0
+       XACT_HOLD_REGISTER  : real = 2.0
+       XACT_INPUT_REGISTER : real = 3.0
+       
+       DO_NOTHING : real = 0.0
+       DO_READ    : real = 1.0
+       DO_WRITE   : real = 2.0
+       DO_READ_K  : real = 3.0
+       DO_WRITE_K : real = 4.0
+       DO_TWINKLE : real = 5.0
+       
+       ZERO : register = new register [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+       
+Patterns:
+
+Inputs:
+        cmd    : hexa
+        rindex : itype
+        rvalue : vtype
+        
+Outputs:
+        xrw    : bool
+        xact   : quad
+        xindex : itype
+        xvalue : vtype
+
+State:
+  xreg       : register
+  last_index : real
+  busy       : bool
+
+Macros:
+
+Assumptions:
+  
+Requirements:
+
+  xvalue_bound_0 : (0.0 <= xvalue and xvalue <= MAX_VTYPE)
+  xvalue_bound_1 : (((   0.0 <= xindex) and (xindex <=  799.0) and (xact < 2.0)) => (xvalue <= 1.0))
+  xvalue_bound_2 : (((   0.0 <= xindex) and (xindex <= 1023.0))                => (xvalue <= VTYPE_BOUND0))
+  xvalue_bound_3 : (((1024.0 <= xindex) and (xindex <= 2047.0))                => (xvalue <= VTYPE_BOUND0))
+  xvalue_bound_4 : (((2048.0 <= xindex) and (xindex <= 4095.0))                => (xvalue <= VTYPE_BOUND1))
+  xvalue_bound_5 : (((4096.0 <= xindex) and (xindex <= 8191.0))                => (xvalue <= VTYPE_BOUND2))
+  
+  last_index_def : last_index == (previous xindex with initial value 0.0)
+  busy_def       : busy       == (previous ((not busy) and (cmd == DO_TWINKLE)) with initial value false)
+  xreg_def       : xreg       == (previous xreg[floor(rindex) := rvalue] with initial value ZERO)
+
+  twinkle_cmd_1  : ((not busy) and (     cmd == DO_TWINKLE)) => ((not xrw) and (xact == XACT_COIL_STATUS)    and (0.0 <= xindex) and (xindex <= 16.0) and (xvalue == 1.0))
+  twinkle_cmd_2  : (     busy                              ) => ((not xrw) and (xact == XACT_COIL_STATUS)    and (xindex == last_index)           and (xvalue == 0.0))
+  read_cmd       : ((not busy) and (     cmd == DO_READ   )) => (     xrw  and (xact == XACT_INPUT_REGISTER))
+  write_cmd      : ((not busy) and (     cmd == DO_WRITE  )) => ((not xrw) and (xact == XACT_HOLD_REGISTER))
+  read_key       : ((not busy) and (     cmd == DO_READ_K )) => (     xrw  and (xact == XACT_INPUT_REGISTER) and (xindex == 0.0))
+  write_key      : ((not busy) and (     cmd == DO_WRITE_K)) => ((not xrw) and (xact == XACT_HOLD_REGISTER)  and (xindex == 1.0) and                    (xvalue == xreg[0]))  
+  
+Properties:
+
