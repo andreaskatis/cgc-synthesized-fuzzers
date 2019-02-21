@@ -154,14 +154,14 @@ node USER_stop(
   USER_xact : USER_quad;
   USER_xindex : USER_itype;
   USER_xvalue : USER_vtype;
-  USER_xreg : USER_register;
+  USER_xreg : USER_vtype;
   USER_last_index : int;
   USER_busy : bool
 ) returns (
   constraints : bool
 );
 var
-  generated_macro_0 : USER_register;
+  generated_macro_0 : int;
   generated_macro_1 : int;
   generated_macro_2 : int;
   generated_macro_3 : int;
@@ -193,49 +193,12 @@ var
   generated_macro_29 : int;
   generated_macro_30 : int;
   generated_macro_31 : int;
-  generated_macro_32 : int;
-  generated_macro_33 : int;
-  generated_macro_34 : int;
-  generated_macro_35 : int;
-  generated_macro_36 : int;
-  generated_macro_37 : int;
-  generated_macro_38 : int;
-  generated_macro_39 : int;
-  generated_macro_40 : int;
-  generated_macro_41 : int;
-  generated_macro_42 : int;
-  generated_macro_43 : int;
-  generated_macro_44 : int;
-  generated_macro_45 : int;
-  generated_macro_46 : int;
-  generated_macro_47 : int;
-  generated_macro_48 : int;
-  generated_macro_49 : int;
-  generated_macro_50 : int;
-  generated_macro_51 : int;
-  generated_macro_52 : int;
-  generated_macro_53 : int;
-  generated_macro_54 : int;
-  generated_macro_55 : int;
-  generated_macro_56 : int;
-  generated_macro_57 : int;
-  generated_macro_58 : int;
-  generated_macro_59 : int;
-  generated_macro_60 : int;
-  generated_macro_61 : int;
-  generated_macro_62 : int;
-  generated_macro_63 : int;
-  generated_macro_64 : int;
-  generated_macro_65 : int;
   USER_cmd_satisfies_predicate : bool;
   USER_rindex_satisfies_predicate : bool;
   USER_rvalue_satisfies_predicate : bool;
+  USER_xact_bound : bool;
+  USER_xindex_bound : bool;
   USER_xvalue_bound_0 : bool;
-  USER_xvalue_bound_1 : bool;
-  USER_xvalue_bound_2 : bool;
-  USER_xvalue_bound_3 : bool;
-  USER_xvalue_bound_4 : bool;
-  USER_xvalue_bound_5 : bool;
   USER_last_index_def : bool;
   USER_busy_def : bool;
   USER_xreg_def : bool;
@@ -255,137 +218,69 @@ let
   --%MAIN;
   counter = (1 -> ((pre counter) + 1));
 
-  generated_macro_0 = USER_xreg[USER_rindex := USER_rvalue];
+  generated_macro_0 = USER_ZERO[0];
 
-  generated_macro_1 = USER_xreg[0];
+  generated_macro_1 = USER_ZERO[0];
 
-  generated_macro_2 = USER_ZERO[0];
+  generated_macro_2 = USER_ZERO[1];
 
-  generated_macro_3 = USER_ZERO[0];
+  generated_macro_3 = USER_ZERO[1];
 
-  generated_macro_4 = USER_ZERO[1];
+  generated_macro_4 = USER_ZERO[2];
 
-  generated_macro_5 = USER_ZERO[1];
+  generated_macro_5 = USER_ZERO[2];
 
-  generated_macro_6 = USER_ZERO[2];
+  generated_macro_6 = USER_ZERO[3];
 
-  generated_macro_7 = USER_ZERO[2];
+  generated_macro_7 = USER_ZERO[3];
 
-  generated_macro_8 = USER_ZERO[3];
+  generated_macro_8 = USER_ZERO[4];
 
-  generated_macro_9 = USER_ZERO[3];
+  generated_macro_9 = USER_ZERO[4];
 
-  generated_macro_10 = USER_ZERO[4];
+  generated_macro_10 = USER_ZERO[5];
 
-  generated_macro_11 = USER_ZERO[4];
+  generated_macro_11 = USER_ZERO[5];
 
-  generated_macro_12 = USER_ZERO[5];
+  generated_macro_12 = USER_ZERO[6];
 
-  generated_macro_13 = USER_ZERO[5];
+  generated_macro_13 = USER_ZERO[6];
 
-  generated_macro_14 = USER_ZERO[6];
+  generated_macro_14 = USER_ZERO[7];
 
-  generated_macro_15 = USER_ZERO[6];
+  generated_macro_15 = USER_ZERO[7];
 
-  generated_macro_16 = USER_ZERO[7];
+  generated_macro_16 = USER_ZERO[8];
 
-  generated_macro_17 = USER_ZERO[7];
+  generated_macro_17 = USER_ZERO[8];
 
-  generated_macro_18 = USER_ZERO[8];
+  generated_macro_18 = USER_ZERO[9];
 
-  generated_macro_19 = USER_ZERO[8];
+  generated_macro_19 = USER_ZERO[9];
 
-  generated_macro_20 = USER_ZERO[9];
+  generated_macro_20 = USER_ZERO[10];
 
-  generated_macro_21 = USER_ZERO[9];
+  generated_macro_21 = USER_ZERO[10];
 
-  generated_macro_22 = USER_ZERO[10];
+  generated_macro_22 = USER_ZERO[11];
 
-  generated_macro_23 = USER_ZERO[10];
+  generated_macro_23 = USER_ZERO[11];
 
-  generated_macro_24 = USER_ZERO[11];
+  generated_macro_24 = USER_ZERO[12];
 
-  generated_macro_25 = USER_ZERO[11];
+  generated_macro_25 = USER_ZERO[12];
 
-  generated_macro_26 = USER_ZERO[12];
+  generated_macro_26 = USER_ZERO[13];
 
-  generated_macro_27 = USER_ZERO[12];
+  generated_macro_27 = USER_ZERO[13];
 
-  generated_macro_28 = USER_ZERO[13];
+  generated_macro_28 = USER_ZERO[14];
 
-  generated_macro_29 = USER_ZERO[13];
+  generated_macro_29 = USER_ZERO[14];
 
-  generated_macro_30 = USER_ZERO[14];
+  generated_macro_30 = USER_ZERO[15];
 
-  generated_macro_31 = USER_ZERO[14];
-
-  generated_macro_32 = USER_ZERO[15];
-
-  generated_macro_33 = USER_ZERO[15];
-
-  generated_macro_34 = USER_xreg[0];
-
-  generated_macro_35 = USER_xreg[0];
-
-  generated_macro_36 = USER_xreg[1];
-
-  generated_macro_37 = USER_xreg[1];
-
-  generated_macro_38 = USER_xreg[2];
-
-  generated_macro_39 = USER_xreg[2];
-
-  generated_macro_40 = USER_xreg[3];
-
-  generated_macro_41 = USER_xreg[3];
-
-  generated_macro_42 = USER_xreg[4];
-
-  generated_macro_43 = USER_xreg[4];
-
-  generated_macro_44 = USER_xreg[5];
-
-  generated_macro_45 = USER_xreg[5];
-
-  generated_macro_46 = USER_xreg[6];
-
-  generated_macro_47 = USER_xreg[6];
-
-  generated_macro_48 = USER_xreg[7];
-
-  generated_macro_49 = USER_xreg[7];
-
-  generated_macro_50 = USER_xreg[8];
-
-  generated_macro_51 = USER_xreg[8];
-
-  generated_macro_52 = USER_xreg[9];
-
-  generated_macro_53 = USER_xreg[9];
-
-  generated_macro_54 = USER_xreg[10];
-
-  generated_macro_55 = USER_xreg[10];
-
-  generated_macro_56 = USER_xreg[11];
-
-  generated_macro_57 = USER_xreg[11];
-
-  generated_macro_58 = USER_xreg[12];
-
-  generated_macro_59 = USER_xreg[12];
-
-  generated_macro_60 = USER_xreg[13];
-
-  generated_macro_61 = USER_xreg[13];
-
-  generated_macro_62 = USER_xreg[14];
-
-  generated_macro_63 = USER_xreg[14];
-
-  generated_macro_64 = USER_xreg[15];
-
-  generated_macro_65 = USER_xreg[15];
+  generated_macro_31 = USER_ZERO[15];
 
   USER_cmd_satisfies_predicate = ((0 <= USER_cmd) and (USER_cmd <= 5));
 
@@ -393,23 +288,17 @@ let
 
   USER_rvalue_satisfies_predicate = ((0 <= USER_rvalue) and (USER_rvalue <= USER_MAX_VTYPE));
 
+  USER_xact_bound = ((0 <= USER_xact) and (USER_xact <= 3));
+
+  USER_xindex_bound = ((0 <= USER_xindex) and (USER_xindex <= USER_MAX_INDEX));
+
   USER_xvalue_bound_0 = ((0 <= USER_xvalue) and (USER_xvalue <= USER_MAX_VTYPE));
-
-  USER_xvalue_bound_1 = ((((0 <= USER_xindex) and (USER_xindex <= 799)) and (USER_xact < 2)) => (USER_xvalue <= 1));
-
-  USER_xvalue_bound_2 = (((0 <= USER_xindex) and (USER_xindex <= 1023)) => (USER_xvalue <= USER_VTYPE_BOUND0));
-
-  USER_xvalue_bound_3 = (((1024 <= USER_xindex) and (USER_xindex <= 2047)) => (USER_xvalue <= USER_VTYPE_BOUND0));
-
-  USER_xvalue_bound_4 = (((2048 <= USER_xindex) and (USER_xindex <= 4095)) => (USER_xvalue <= USER_VTYPE_BOUND1));
-
-  USER_xvalue_bound_5 = (((4096 <= USER_xindex) and (USER_xindex <= 8191)) => (USER_xvalue <= USER_VTYPE_BOUND2));
 
   USER_last_index_def = (USER_last_index = (0 -> (pre USER_xindex)));
 
   USER_busy_def = (USER_busy = (false -> (pre ((not USER_busy) and (USER_cmd = USER_DO_TWINKLE)))));
 
-  USER_xreg_def = (USER_xreg = (USER_ZERO -> (pre generated_macro_0)));
+  USER_xreg_def = (USER_xreg = (0 -> (pre (if (USER_rindex = 0) then USER_rvalue else USER_xreg))));
 
   USER_twinkle_cmd_1 = (((not USER_busy) and (USER_cmd = USER_DO_TWINKLE)) => (((((not USER_xrw) and (USER_xact = USER_XACT_COIL_STATUS)) and (0 <= USER_xindex)) and (USER_xindex <= 16)) and (USER_xvalue = 1)));
 
@@ -421,9 +310,9 @@ let
 
   USER_read_key = (((not USER_busy) and (USER_cmd = USER_DO_READ_K)) => ((USER_xrw and (USER_xact = USER_XACT_INPUT_REGISTER)) and (USER_xindex = 0)));
 
-  USER_write_key = (((not USER_busy) and (USER_cmd = USER_DO_WRITE_K)) => ((((not USER_xrw) and (USER_xact = USER_XACT_HOLD_REGISTER)) and (USER_xindex = 1)) and (USER_xvalue = generated_macro_1)));
+  USER_write_key = (((not USER_busy) and (USER_cmd = USER_DO_WRITE_K)) => ((((not USER_xrw) and (USER_xact = USER_XACT_HOLD_REGISTER)) and (USER_xindex = 1)) and (USER_xvalue = USER_xreg)));
 
-  USER_ZERO_satisfies_predicate = (((0 <= generated_macro_2) and (generated_macro_3 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_4) and (generated_macro_5 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_6) and (generated_macro_7 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_8) and (generated_macro_9 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_10) and (generated_macro_11 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_12) and (generated_macro_13 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_14) and (generated_macro_15 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_16) and (generated_macro_17 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_18) and (generated_macro_19 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_20) and (generated_macro_21 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_22) and (generated_macro_23 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_24) and (generated_macro_25 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_26) and (generated_macro_27 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_28) and (generated_macro_29 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_30) and (generated_macro_31 <= USER_MAX_VTYPE)) and ((0 <= generated_macro_32) and (generated_macro_33 <= USER_MAX_VTYPE)))))))))))))))));
+  USER_ZERO_satisfies_predicate = (((0 <= generated_macro_0) and (generated_macro_1 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_2) and (generated_macro_3 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_4) and (generated_macro_5 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_6) and (generated_macro_7 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_8) and (generated_macro_9 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_10) and (generated_macro_11 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_12) and (generated_macro_13 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_14) and (generated_macro_15 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_16) and (generated_macro_17 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_18) and (generated_macro_19 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_20) and (generated_macro_21 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_22) and (generated_macro_23 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_24) and (generated_macro_25 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_26) and (generated_macro_27 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_28) and (generated_macro_29 <= USER_MAX_VTYPE)) and ((0 <= generated_macro_30) and (generated_macro_31 <= USER_MAX_VTYPE)))))))))))))))));
 
   USER_xact_satisfies_predicate = ((0 <= USER_xact) and (USER_xact <= 3));
 
@@ -431,9 +320,9 @@ let
 
   USER_xvalue_satisfies_predicate = ((0 <= USER_xvalue) and (USER_xvalue <= USER_MAX_VTYPE));
 
-  USER_xreg_satisfies_predicate = (((0 <= generated_macro_34) and (generated_macro_35 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_36) and (generated_macro_37 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_38) and (generated_macro_39 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_40) and (generated_macro_41 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_42) and (generated_macro_43 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_44) and (generated_macro_45 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_46) and (generated_macro_47 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_48) and (generated_macro_49 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_50) and (generated_macro_51 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_52) and (generated_macro_53 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_54) and (generated_macro_55 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_56) and (generated_macro_57 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_58) and (generated_macro_59 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_60) and (generated_macro_61 <= USER_MAX_VTYPE)) and (((0 <= generated_macro_62) and (generated_macro_63 <= USER_MAX_VTYPE)) and ((0 <= generated_macro_64) and (generated_macro_65 <= USER_MAX_VTYPE)))))))))))))))));
+  USER_xreg_satisfies_predicate = ((0 <= USER_xreg) and (USER_xreg <= USER_MAX_VTYPE));
 
-  constraints = historically((USER_xvalue_bound_0 and (USER_xvalue_bound_1 and (USER_xvalue_bound_2 and (USER_xvalue_bound_3 and (USER_xvalue_bound_4 and (USER_xvalue_bound_5 and (USER_last_index_def and (USER_busy_def and (USER_xreg_def and (USER_twinkle_cmd_1 and (USER_twinkle_cmd_2 and (USER_read_cmd and (USER_write_cmd and (USER_read_key and USER_write_key)))))))))))))));
+  constraints = historically((USER_xact_bound and (USER_xindex_bound and (USER_xvalue_bound_0 and (USER_last_index_def and (USER_busy_def and (USER_xreg_def and (USER_twinkle_cmd_1 and (USER_twinkle_cmd_2 and (USER_read_cmd and (USER_write_cmd and (USER_read_key and USER_write_key))))))))))));
 
   assert (USER_cmd_satisfies_predicate and (USER_rindex_satisfies_predicate and USER_rvalue_satisfies_predicate));
 

@@ -55,7 +55,7 @@ Macros:
 Assumptions:
   
 Requirements:
-
+  xindex_bound   : (0.0 <= xindex and xindex <= MAX_INDEX)
   xvalue_bound_0 : (0.0 <= xvalue and xvalue <= MAX_VTYPE)
   //xvalue_bound_1 : (((   0.0 <= xindex) and (xindex <=  799.0) and (xact < 2.0)) => (xvalue <= 1.0))
   //xvalue_bound_2 : (((   0.0 <= xindex) and (xindex <= 1023.0))                => (xvalue <= VTYPE_BOUND0))

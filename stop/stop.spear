@@ -46,38 +46,38 @@ Outputs:
         xvalue : vtype
 
 State:
-  xreg       : register
+  xreg       : vtype
   last_index : int
   busy       : bool
 
 Macros:
 
 Assumptions:
-  rvalue_bound_2 : (((   0 <= rindex) and (rindex <= 1023))                => (rvalue <= VTYPE_BOUND0))
-  rvalue_bound_3 : (((1024 <= rindex) and (rindex <= 2047))                => (rvalue <= VTYPE_BOUND0))
-  rvalue_bound_4 : (((2048 <= rindex) and (rindex <= 4095))                => (rvalue <= VTYPE_BOUND1))
-  rvalue_bound_5 : (((4096 <= rindex) and (rindex <= 8191))                => (rvalue <= VTYPE_BOUND2))
+  //rvalue_bound_2 : (((   0 <= rindex) and (rindex <= 1023))                => (rvalue <= VTYPE_BOUND0))
+  //rvalue_bound_3 : (((1024 <= rindex) and (rindex <= 2047))                => (rvalue <= VTYPE_BOUND0))
+  //rvalue_bound_4 : (((2048 <= rindex) and (rindex <= 4095))                => (rvalue <= VTYPE_BOUND1))
+  //rvalue_bound_5 : (((4096 <= rindex) and (rindex <= 8191))                => (rvalue <= VTYPE_BOUND2))
   
 Requirements:
   xact_bound     : (0 <= xact and xact <= 3)
   xindex_bound   : (0 <= xindex and xindex <= MAX_INDEX)
   xvalue_bound_0 : (0 <= xvalue and xvalue <= MAX_VTYPE)
-  xvalue_bound_1 : (((   0 <= xindex) and (xindex <=  799) and (xact < 2)) => (xvalue <= 1))
-  xvalue_bound_2 : (((   0 <= xindex) and (xindex <= 1023))                => (xvalue <= VTYPE_BOUND0))
-  xvalue_bound_3 : (((1024 <= xindex) and (xindex <= 2047))                => (xvalue <= VTYPE_BOUND0))
-  xvalue_bound_4 : (((2048 <= xindex) and (xindex <= 4095))                => (xvalue <= VTYPE_BOUND1))
-  xvalue_bound_5 : (((4096 <= xindex) and (xindex <= 8191))                => (xvalue <= VTYPE_BOUND2))
+  //xvalue_bound_1 : (((   0 <= xindex) and (xindex <=  799) and (xact < 2)) => (xvalue <= 1))
+  //xvalue_bound_2 : (((   0 <= xindex) and (xindex <= 1023))                => (xvalue <= VTYPE_BOUND0))
+  //xvalue_bound_3 : (((1024 <= xindex) and (xindex <= 2047))                => (xvalue <= VTYPE_BOUND0))
+  //xvalue_bound_4 : (((2048 <= xindex) and (xindex <= 4095))                => (xvalue <= VTYPE_BOUND1))
+  //xvalue_bound_5 : (((4096 <= xindex) and (xindex <= 8191))                => (xvalue <= VTYPE_BOUND2))
   
   last_index_def : last_index == (previous xindex with initial value 0)
   busy_def       : busy       == (previous ((not busy) and (cmd == DO_TWINKLE)) with initial value false)
-  xreg_def       : xreg       == (previous xreg[rindex := rvalue] with initial value ZERO)
+  xreg_def       : xreg       == (previous (if (rindex == 0) then rvalue else xreg) with initial value 0)
 
   twinkle_cmd_1  : ((not busy) and (     cmd == DO_TWINKLE)) => ((not xrw) and (xact == XACT_COIL_STATUS)    and (0 <= xindex) and (xindex <= 16) and (xvalue == 1))
   twinkle_cmd_2  : (     busy                              ) => ((not xrw) and (xact == XACT_COIL_STATUS)    and (xindex == last_index)           and (xvalue == 0))
   read_cmd       : ((not busy) and (     cmd == DO_READ   )) => (     xrw  and (xact == XACT_INPUT_REGISTER))
   write_cmd      : ((not busy) and (     cmd == DO_WRITE  )) => ((not xrw) and (xact == XACT_HOLD_REGISTER))
   read_key       : ((not busy) and (     cmd == DO_READ_K )) => (     xrw  and (xact == XACT_INPUT_REGISTER) and (xindex == 0))
-  write_key      : ((not busy) and (     cmd == DO_WRITE_K)) => ((not xrw) and (xact == XACT_HOLD_REGISTER)  and (xindex == 1) and                    (xvalue == xreg[0]))  
+  write_key      : ((not busy) and (     cmd == DO_WRITE_K)) => ((not xrw) and (xact == XACT_HOLD_REGISTER)  and (xindex == 1) and                    (xvalue == xreg))  
   
 Properties:
 

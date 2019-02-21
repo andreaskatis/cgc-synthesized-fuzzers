@@ -230,6 +230,7 @@ var
   USER_cmd_satisfies_predicate : bool;
   USER_rindex_satisfies_predicate : bool;
   USER_rvalue_satisfies_predicate : bool;
+  USER_xindex_bound : bool;
   USER_xvalue_bound_0 : bool;
   USER_last_index_def : bool;
   USER_busy_def : bool;
@@ -388,6 +389,8 @@ let
 
   USER_rvalue_satisfies_predicate = ((0.0 <= USER_rvalue) and (USER_rvalue <= USER_MAX_VTYPE));
 
+  USER_xindex_bound = ((0.0 <= USER_xindex) and (USER_xindex <= USER_MAX_INDEX));
+
   USER_xvalue_bound_0 = ((0.0 <= USER_xvalue) and (USER_xvalue <= USER_MAX_VTYPE));
 
   USER_last_index_def = (USER_last_index = (0.0 -> (pre USER_xindex)));
@@ -418,7 +421,7 @@ let
 
   USER_xreg_satisfies_predicate = (((0.0 <= generated_macro_34) and (generated_macro_35 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_36) and (generated_macro_37 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_38) and (generated_macro_39 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_40) and (generated_macro_41 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_42) and (generated_macro_43 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_44) and (generated_macro_45 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_46) and (generated_macro_47 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_48) and (generated_macro_49 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_50) and (generated_macro_51 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_52) and (generated_macro_53 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_54) and (generated_macro_55 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_56) and (generated_macro_57 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_58) and (generated_macro_59 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_60) and (generated_macro_61 <= USER_MAX_VTYPE)) and (((0.0 <= generated_macro_62) and (generated_macro_63 <= USER_MAX_VTYPE)) and ((0.0 <= generated_macro_64) and (generated_macro_65 <= USER_MAX_VTYPE)))))))))))))))));
 
-  constraints = historically((USER_xvalue_bound_0 and (USER_last_index_def and (USER_busy_def and (USER_xreg_def and (USER_twinkle_cmd_1 and (USER_twinkle_cmd_2 and (USER_read_cmd and (USER_write_cmd and (USER_read_key and USER_write_key))))))))));
+  constraints = historically((USER_xindex_bound and (USER_xvalue_bound_0 and (USER_last_index_def and (USER_busy_def and (USER_xreg_def and (USER_twinkle_cmd_1 and (USER_twinkle_cmd_2 and (USER_read_cmd and (USER_write_cmd and (USER_read_key and USER_write_key)))))))))));
 
   assert (USER_cmd_satisfies_predicate and (USER_rindex_satisfies_predicate and USER_rvalue_satisfies_predicate));
 
