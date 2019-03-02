@@ -1,54 +1,49 @@
-#include "ptaas.h"
+#include "stop.h"
 #include <stdlib.h>
+#include <stdio.h>
 
-typedef struct tuple {
-  int x;
-  int y;
-  int z;  
-} tuple_t;
+typedef struct stop_output {
+  int  xrw;
+  int  xact;
+  int  xindex;
+  int  xvalue;
+} stop_output_t;
 
-typedef struct rgb {
-  int r;
-  int g;
-  int b;
-} rgb_t;
+typedef struct stop_feedback {
+  int  rindex;
+  int  rvalue;
+} stop_feedback_t;
 
-typedef struct msg {
-  int     object;
-  int     spec;
-  int     parm;
-  tuple_t position;
-  tuple_t vector;
-  rgb_t   color;
-  rgb_t   emission;
-} msg_t;
+typedef struct stop_input {
+  int  cmd;
+} stop_input_t;
 
 extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
   int min = lflag ? lbound : lbound+1;
   int max = uflag ? ubound : ubound-1;
-  int range = max - min + 1;
+  int range = max - min;
+  //fprintf(stdout,"range = %d\n",range);
   double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
+  //fprintf(stdout,"rnd   = %g\n",rnd);
   int value = ((int) (((double) range)*rnd));
-  return value + min;
+  //fprintf(stdout,"value = %d\n",value);
+  int res = value + min;
+  //fprintf(stdout,"rand  = %d\n",res);
+  return res;
 }
 
-msg_t step() {
+void apply_feedback(stop_feedback_t fb) {
+  USER_rindex[1] = fb.rindex;
+  USER_rvalue[1] = fb.rvalue;
+}
+
+stop_output_t compute_output(stop_input_t in) {
+  USER_cmd[1] = in.cmd;
   updateFunction();
-  msg_t msg;
-  msg.object      = object[0];
-  msg.spec        = spec[0];
-  msg.parm        = parm[0];
-  msg.position.x  = position_x[0];
-  msg.position.y  = position_y[0];
-  msg.position.z  = position_z[0];
-  msg.vector.x    = vector_x[0];
-  msg.vector.y    = vector_y[0];
-  msg.vector.z    = vector_z[0];
-  msg.color.r     = color_r[0];
-  msg.color.g     = color_g[0];
-  msg.color.b     = color_b[0];
-  msg.emission.r  = emission_r[0];;
-  msg.emission.g  = emission_g[0];;
-  msg.emission.b  = emission_b[0];;
-  return msg;
+  stop_output_t stop_output;
+  stop_output.xrw         = USER_xrw[1];
+  stop_output.xact        = USER_xact[1];
+  stop_output.xindex      = USER_xindex[1];
+  stop_output.xvalue      = USER_xvalue[1];
+  return stop_output;
 }
