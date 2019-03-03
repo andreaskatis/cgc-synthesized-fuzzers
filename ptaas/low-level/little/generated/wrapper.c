@@ -1,14 +1,10 @@
-#include "or.h"
+#include "little.h"
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct or_output {
+typedef struct little_output {
   int  out;
-} or_output_t;
-
-typedef struct or_input {
-  int  in;
-} or_input_t;
+} little_output_t;
 
 extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
   int min = lflag ? lbound : lbound+1;
@@ -24,10 +20,10 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
   return res;
 }
 
-or_output_t compute_output(or_input_t arg) {
-  in[1] = arg.in;
+little_output_t compute_output() {
+  fprintf(stdout,"st : %d\n",USER_st[1]);
   updateFunction();
-  or_output_t or_output;
-  or_output.out = out[1];
-  return or_output;
+  little_output_t little_output;
+  little_output.out = USER_i[1];
+  return little_output;
 }
