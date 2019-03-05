@@ -583,15 +583,21 @@ def run(start,fail,accepting,delta):
     for (st,line) in enumerate(delta):
         hist[st] = [0 for _ in line]
     buffer = bytearray()
-    bad = False
+    msg_err = False
     cnt = 0
     while True:
-        err = random.random() < 0.1 if bad else False
-        (ch,st,hist) = step(st,err,delta,hist)
+        char_err = random.random() < 0.1 if msg_err else False
+        (ch,st,hist) = step(st,char_err,delta,hist)
         buffer.append(ch)
         if (st == start):
-            bad = random.random() < 0.25
+            msg_err = random.random() < 0.25
+            ##
+            ## Here is where we want to send our command to PTaaS ..
+            ## we ignore any response.
+            ##
             print(buffer.decode('cp437'))
+            ##
+            ##
             buffer = bytearray()
             cnt += 1
             if (cnt % 1000 == 0):
