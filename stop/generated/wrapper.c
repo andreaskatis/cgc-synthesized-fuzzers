@@ -33,12 +33,12 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 void apply_feedback(stop_feedback_t fb) {
-  USER_rindex[1] = fb.rindex;
-  USER_rvalue[1] = fb.rvalue;
+  USER_rindex[0] = fb.rindex;
+  USER_rvalue[0] = fb.rvalue;
 }
 
 stop_output_t compute_output(stop_input_t in) {
-  USER_cmd[1] = in.cmd;
+  USER_cmd[0] = in.cmd;
   fprintf(stdout," %d       %04d\n",USER_busy[1],USER_xreg[1]);
   updateFunction();
   stop_output_t stop_output;
