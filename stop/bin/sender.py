@@ -63,7 +63,11 @@ class SENDER():
         c_apply_feedback(c_feedback)
         c_input = c_stop_input_str(random.randint(0,5))
         c_output = c_compute_output(c_input)
-        print('{:d}  {:04d}  {:04d}  {:d}  {:d}  {:04d}  {:012d}'.format(c_input.cmd,c_feedback.rindex,c_feedback.rvalue,c_output.xact,c_output.xrw,c_output.xindex,c_output.xvalue))
+        ##print('{:d}  {:04d}  {:04d}  {:d}  {:d}  {:04d}  {:012d}'.format(c_input.cmd,c_feedback.rindex,c_feedback.rvalue,c_output.xact,c_output.xrw,c_output.xindex,c_output.xvalue))
+        cmd  = ['NOOP  ','READ  ','WRITE ','READK ','WRITEK','TWINKL'][c_input.cmd]
+        xact = ['COIL','STAT','HREG','IREG'][c_output.xact]
+        xrw  = ['w','r'][c_output.xrw]
+        print('{}  {:04d}  {:04d} | {}  {}  {:04d}  {:012d}'.format(cmd,c_feedback.rindex,c_feedback.rvalue,xrw,xact,c_output.xindex,c_output.xvalue))
         return c_output
 
     def processTestVector(self,c_output):
