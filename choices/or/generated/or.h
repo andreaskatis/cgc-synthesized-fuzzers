@@ -16,6 +16,6 @@ extern void moveHistory();
 
 extern void updateFunction();
 
-extern null generateRandomValue(_Bool lflag, _Bool uflag, null lbound, null ubound);
+extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound);
 
 #endif

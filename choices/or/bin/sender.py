@@ -7,11 +7,11 @@ import socket
 
 ###############################################################################
 
-class c_or_output_str(Structure):
-    _fields_ = [("in"    , c_int)
+class c_or_input_str(Structure):
+    _fields_ = [("xin"    , c_int)
     ]
 
-class c_or_input_str (Structure):
+class c_or_output_str (Structure):
     _fields_ = [("out"   , c_int)
     ]
 
@@ -36,7 +36,7 @@ class SENDER():
         global c_compute_output
         c_input = c_or_input_str(random.randint(-9,9))
         c_output = c_compute_output(c_input)
-        print('{:02d} {:+04d}'.format(c_input.in, c_output.out))
+        print('{:02d} {:+04d}'.format(c_input.xin, c_output.out))
         return c_output
 
 ###############################################################################
