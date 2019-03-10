@@ -7,7 +7,7 @@ typedef struct or_output {
 } or_output_t;
 
 typedef struct or_input {
-  int  in;
+  int  xin;
 } or_input_t;
 
 extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
@@ -25,7 +25,7 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 or_output_t compute_output(or_input_t arg) {
-  in[1] = arg.in;
+  in[0] = arg.xin;
   updateFunction();
   or_output_t or_output;
   or_output.out = out[1];
