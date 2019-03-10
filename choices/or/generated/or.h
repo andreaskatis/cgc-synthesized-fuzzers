@@ -4,9 +4,11 @@
 #include <stdlib.h>
 
 
+extern int aeval_tmp_rand_int_2[2];
+extern int in[2];
 extern int aeval_tmp_max_0[2];
 extern int out[2];
-extern int in[2];
+extern int aeval_tmp_rand_int_1[2];
 
 extern void skolem_0();
 
@@ -16,6 +18,6 @@ extern void moveHistory();
 
 extern void updateFunction();
 
-extern null generateRandomValue(_Bool lflag, _Bool uflag, null lbound, null ubound);
+extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound);
 
 #endif
