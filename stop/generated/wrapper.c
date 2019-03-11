@@ -59,7 +59,7 @@ void apply_feedback(stop_feedback_t fb) {
 stop_output_t compute_output(stop_input_t in) {
   USER_cmd[0] = in.cmd;
   updateFunction();
-  fprintf(stdout," %d       %04d\n",USER_busy[1],USER_xreg[1]);
+  fprintf(stdout," %d            %04d\n",USER_busy[1],USER_xreg[1]);
   stop_output_t stop_output;
   stop_output.xrw         = USER_xrw[1];
   stop_output.xact        = USER_xact[1];
