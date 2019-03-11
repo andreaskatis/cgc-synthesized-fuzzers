@@ -33,6 +33,13 @@ c_apply_feedback  = _libstop.apply_feedback
 c_apply_feedback.argtypes  = [c_stop_feedback_str]
 
 ###############################################################################
+HEADER = """
+cmd                  xrw
+|busy                |  xact
+||      rindex       |  |     xindex
+||      |     rval/  |  |     |     xvalue
+||      |     xreg   |  |     |     |
+||      |     |      |  |     |     |"""
 
 class SENDER():
 
@@ -48,7 +55,9 @@ class SENDER():
         self.wsock.close()
 
     def run(self):
+        global HEADER
         self.openSockets()
+        print(HEADER)
         try:
             while True:
                 c_output = self.getTestVector()
