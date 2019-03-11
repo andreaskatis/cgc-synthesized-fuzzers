@@ -21,7 +21,7 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 little_output_t compute_output() {
-  fprintf(stdout,"st : %d\n",USER_st[1]);
+  fprintf(stdout,"State  : %+04d\n",USER_st[1]);
   updateFunction();
   little_output_t little_output;
   little_output.out = USER_i[1];

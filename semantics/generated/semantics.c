@@ -7,12 +7,20 @@ _Bool USER_out_req[2];
 int USER_median[2];
 int USER_fuzz[2];
 _Bool historically_0_holds[2];
+int aeval_tmp_rand_int_1[2];
 int USER_st[2];
 _Bool USER_med_req[2];
 _Bool historically_0_signal[2];
+int aeval_tmp_rand_int_0[2];
 _Bool USER_stx_req[2];
 
 void skolem_0() {
+  aeval_tmp_rand_int_1[0] = generateRandomValue(0, 0, 0, 0);
+  assert(0 < (aeval_tmp_rand_int_1[0]));
+
+  aeval_tmp_rand_int_0[0] = generateRandomValue(0, 0, 0, 0);
+  assert(0 < (aeval_tmp_rand_int_0[0]));
+
   if ((((init == 0) && (((USER_st[1]) + (USER_val[1])) == 0)) || (!(init == 0))) && ((init == 0) || (historically_0_holds[1]))) {
   historically_0_holds[0] = 1;
   USER_st[0] = (USER_st[1]) + (USER_val[1]);
@@ -20,8 +28,8 @@ void skolem_0() {
   USER_stx_req[0] = ((USER_st[1]) + (USER_val[1])) == ((init == 0) ? (0) : ((USER_st[1]) + (USER_val[1])));
   USER_med_req[0] = ((USER_val[0]) + ((USER_st[1]) + (USER_val[1]))) == (((USER_st[1]) + (USER_val[1])) + (USER_val[0]));
   USER_median[0] = (USER_val[0]) + ((USER_st[1]) + (USER_val[1]));
-  USER_out_req[0] = ((((USER_st[1]) + (USER_val[1])) + (USER_val[0])) <= (((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - 1)) && ((((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - 1) < ((((USER_st[1]) + (USER_val[1])) + (USER_val[0])) + 10));
-  USER_fuzz[0] = ((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - 1;
+  USER_out_req[0] = ((((USER_st[1]) + (USER_val[1])) + (USER_val[0])) <= (((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - (aeval_tmp_rand_int_1[0]))) && ((((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - (aeval_tmp_rand_int_1[0])) < ((((USER_st[1]) + (USER_val[1])) + (USER_val[0])) + 10));
+  USER_fuzz[0] = ((-((-10)) + ((((-1)) * (USER_val[0])) + ((((-1)) * (USER_st[1])) + (((-1)) * (USER_val[1])))))) - (aeval_tmp_rand_int_1[0]);
 } else {
   historically_0_holds[0] = 1;
   USER_st[0] = 0;
@@ -29,8 +37,8 @@ void skolem_0() {
   USER_stx_req[0] = 0 == ((init == 0) ? (0) : ((USER_st[1]) + (USER_val[1])));
   USER_med_req[0] = (USER_val[0]) == (USER_val[0]);
   USER_median[0] = USER_val[0];
-  USER_out_req[0] = ((USER_val[0]) <= (((-((-10)) + (((-1)) * (USER_val[0])))) - 1)) && ((((-((-10)) + (((-1)) * (USER_val[0])))) - 1) < ((USER_val[0]) + 10));
-  USER_fuzz[0] = ((-((-10)) + (((-1)) * (USER_val[0])))) - 1;
+  USER_out_req[0] = ((USER_val[0]) <= (((-((-10)) + (((-1)) * (USER_val[0])))) - (aeval_tmp_rand_int_0[0]))) && ((((-((-10)) + (((-1)) * (USER_val[0])))) - (aeval_tmp_rand_int_0[0])) < ((USER_val[0]) + 10));
+  USER_fuzz[0] = ((-((-10)) + (((-1)) * (USER_val[0])))) - (aeval_tmp_rand_int_0[0]);
 }
 
   return;
@@ -45,9 +53,11 @@ for (iterator = 1; iterator > 0; iterator--) {
   USER_median[iterator] = USER_median[iterator - 1];
   USER_fuzz[iterator] = USER_fuzz[iterator - 1];
   historically_0_holds[iterator] = historically_0_holds[iterator - 1];
+  aeval_tmp_rand_int_1[iterator] = aeval_tmp_rand_int_1[iterator - 1];
   USER_st[iterator] = USER_st[iterator - 1];
   USER_med_req[iterator] = USER_med_req[iterator - 1];
   historically_0_signal[iterator] = historically_0_signal[iterator - 1];
+  aeval_tmp_rand_int_0[iterator] = aeval_tmp_rand_int_0[iterator - 1];
   USER_stx_req[iterator] = USER_stx_req[iterator - 1];
 }
 return;

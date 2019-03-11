@@ -1,9 +1,9 @@
 
-all: libstop.so
-	cp libstop.so ../lib/.
+all: libsemantics.so
+	cp libsemantics.so ../lib/.
 
-libstop.so: stop.c wrapper.c
-	$(CC) -fPIC -shared -o libstop.so stop.c wrapper.c
+libsemantics.so: semantics.c wrapper.c
+	$(CC) -fPIC -shared -o libsemantics.so semantics.c wrapper.c
 
 clean:
-	$(RM) -rf libstop.so
+	$(RM) -rf libsemantics.so
