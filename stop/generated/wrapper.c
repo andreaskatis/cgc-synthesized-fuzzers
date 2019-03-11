@@ -44,7 +44,7 @@ extern int generateRandomValueExcl(int excl1, _Bool lflag, _Bool uflag, int lbou
   int res = value + min;
 
   //fprintf(stdout,"rand  = %d\n",res);
-  if (res != excl1) {
+  if (res == excl1) {
     return generateRandomValueExcl(excl1, lflag, uflag, lbound, ubound);
   } else {
     return res;
