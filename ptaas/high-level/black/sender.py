@@ -2,7 +2,8 @@
 from ctypes import *
 import sys
 import argparse
-import socket
+import base64
+import time
 
 ###############################################################################
 
@@ -39,24 +40,13 @@ def cstep():
 
 class SENDER():
 
-    def __init__(self,relay_address):
-        self.relay_address = relay_address
-
-    def openSockets(self):
-        self.wsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.wsock.connect(self.relay_address)
-
-    def closeSockets(self):
-        self.wsock.close()
+    def __init__(self):
+        pass
 
     def run(self):
-        self.openSockets()
-        try:
-            while True:
-                msg = self.getTestVector()
-                self.processTestVector(msg)
-        finally:
-            self.closeSockets()
+        while True:
+            msg = self.getTestVector()
+            self.processTestVector(msg)
 
     def getTestVector(self):
         return cstep()
@@ -78,19 +68,13 @@ class SENDER():
         msg += ' emission.r {}'.format(struc.emission.r)
         msg += ' emission.g {}'.format(struc.emission.g)
         msg += ' emission.b {}'.format(struc.emission.b)
-        print('sending : ' + msg)
-        self.wsock.send(bytes(msg, 'utf-8'))
+        e64 = base64.b64encode(msg.encode()).decode()
+        sys.stdout.write(e64 + '\n')
 
 ###############################################################################
 def main():
     parser = argparse.ArgumentParser(description="PTAAS Relay")
-    parser.add_argument('-r', '--relay',
-                        required=False,
-                        help="The URL of the Relay [localhost]")
-    parser.set_defaults(fuzzer='localhost')
-    args = parser.parse_args()
-    relay_port = 9973
-    sender = SENDER((args.fuzzer,relay_port))
+    sender = SENDER()
     sender.run()
 
 ###############################################################################

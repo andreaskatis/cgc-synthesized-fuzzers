@@ -1,37 +1,24 @@
 #!/usr/bin/env python3
 import sys
+from sys import stdin
 import argparse
-import socket
+import base64
 
 ###############################################################################
 class RELAY():
 
-    def __init__(self,fuzzer_address,target_address):
-        self.fuzzer_address = fuzzer_address
-        self.target_address = target_address
-
-    def openSockets(self):
-        self.wsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.wsock.connect(self.target_address)
-        self.rsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.rsock.bind(self.fuzzer_address)
-
-    def closeSockets(self):
-        self.wsock.close()
-        self.rsock.close()
+    def __init__(self):
+        pass
 
     def run(self):
-        self.openSockets()
-        try:
-            while True:
-                msg = self.getTestVector()
-                self.processTestVector(msg)
-        finally:
-            self.closeSockets()
+        while True:
+            msg = self.getTestVector()
+            self.processTestVector(msg)
 
     def getTestVector(self):
-        payload,address = self.rsock.recvfrom(4096)
-        pairlist = payload.decode('utf-8').split()
+        payload = stdin.readline()
+        un64 = base64.b64decode(payload.encode()).decode()
+        pairlist = un64.split()
         assert(0 == (len(pairlist) % 2))
         pairs = [pairlist[i:i+2] for i in range(0,len(pairlist),2)]
         alist = { key: value for (key,value) in pairs}
@@ -60,7 +47,7 @@ class RELAY():
         ##
         ## We don't really want to print/return this .. we want to "send" it somewhere ..
         ##
-        print('fuzzing: \n{}'.format(msg))
+        print(msg)
         ##self.wsock.send(bytes(msg, 'utf-8'))
 
 ###############################################################################
@@ -95,14 +82,7 @@ def test():
 ###############################################################################
 def main():
     parser = argparse.ArgumentParser(description="PTAAS Relay")
-    parser.add_argument('-f', '--fuzzer',
-                        required=False,
-                        help="The URL of the Fuzzer [localhost]")
-    parser.set_defaults(fuzzer='localhost')
-    args = parser.parse_args()
-    target_address = ('localhost',9967)
-    fuzzer_port = 9973
-    relay = RELAY((args.fuzzer,fuzzer_port),target_address)
+    relay = RELAY()
     relay.run()
 
 ###############################################################################
