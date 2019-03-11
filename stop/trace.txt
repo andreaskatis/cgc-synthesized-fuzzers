@@ -19,7 +19,15 @@ Here it is either 0 or 1
   read_key       : ((not busy) and (     cmd == DO_READ_K )) => (     xrw  and (xact == XACT_INPUT_REGISTER) and (xindex == 0))
   write_key      : ((not busy) and (     cmd == DO_WRITE_K)) => ((not xrw) and (xact == XACT_HOLD_REGISTER)  and (xindex == 1) and                    (xvalue == xreg))  
 
-If we look at our trace, we see xindex is only ever 0 or 1.
+
+  If we look at our trace, we see xindex is only ever 0 or 1.
+
+  Of course, this is consistent with the spec .. it just feels like there is a degree of freedom that is not being exploited.
+
+  We could probably force more interesting behavior by changing the lower bound on twinkle_cmd_1 as follows:
+
+  twinkle_cmd_1  : ((not busy) and (     cmd == DO_TWINKLE)) => ((not xrw) and (xact == XACT_COIL_STATUS)    and (2 <= xindex) and (xindex <= 16) and (xvalue == 1))
+
 
 cmd                  xrw
 |busy                |  xact
