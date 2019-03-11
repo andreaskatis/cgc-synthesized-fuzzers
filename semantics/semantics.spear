@@ -9,9 +9,9 @@ Types:
 Constants:
 
 Patterns:
-  pattern oscillate() returns (res: int)
+  pattern oscillate() returns (res: real)
   let
-     res = 2 * (previous (- res) with initial value 10)
+     res = 2.0 * (previous (- res) with initial value 10.0)
   tel
   
   pattern thrice(p: bool) returns (res: bool)
@@ -25,23 +25,23 @@ Patterns:
   tel
   
 Inputs:
-  val: int
+  val: real
   
 Outputs:
-  median: int
-  fuzz  : int
+  median: real
+  fuzz  : real
     
 State:
-  st: int
+  st: real
   
 Macros:
 
 Assumptions:
 
 Requirements:
-  stx_req : st == previous (st + val) with initial value 0
+  stx_req : st == previous (st + val) with initial value 0.0
   med_req : median == st + val
-  out_req : st + val <= fuzz and fuzz < st + val + 10
+  out_req : st + val <= fuzz and fuzz < st + val + 10.0
   
 Properties:
   test_pattern observe : (thrice(fuzz == oscillate()))

@@ -143,18 +143,18 @@ tel;
 node USER_oscillate(
 
 ) returns (
-  USER_res : int
+  USER_res : real
 );
 let
-  USER_res = (2 * (10 -> (pre (-USER_res))));
+  USER_res = (2.0 * (10.0 -> (pre (-USER_res))));
 
 tel;
 
 node USER_semantics(
-  USER_val : int;
-  USER_median : int;
-  USER_fuzz : int;
-  USER_st : int
+  USER_val : real;
+  USER_median : real;
+  USER_fuzz : real;
+  USER_st : real
 ) returns (
   constraints : bool
 );
@@ -168,11 +168,11 @@ let
   --%MAIN;
   counter = (1 -> ((pre counter) + 1));
 
-  USER_stx_req = (USER_st = (0 -> (pre (USER_st + USER_val))));
+  USER_stx_req = (USER_st = (0.0 -> (pre (USER_st + USER_val))));
 
   USER_med_req = (USER_median = (USER_st + USER_val));
 
-  USER_out_req = (((USER_st + USER_val) <= USER_fuzz) and (USER_fuzz < ((USER_st + USER_val) + 10)));
+  USER_out_req = (((USER_st + USER_val) <= USER_fuzz) and (USER_fuzz < ((USER_st + USER_val) + 10.0)));
 
   USER_test_pattern = USER_thrice((USER_fuzz = USER_oscillate()));
 
