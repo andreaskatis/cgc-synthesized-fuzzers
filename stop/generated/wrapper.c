@@ -32,6 +32,25 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
   return res;
 }
 
+extern int generateRandomValueExcl(int excl1, _Bool lflag, _Bool uflag, int lbound, int ubound) {
+  int min = lflag ? lbound : lbound+1;
+  int max = uflag ? ubound : ubound-1;
+  int range = max - min;
+  //fprintf(stdout,"range = %d\n",range);
+  double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
+  //fprintf(stdout,"rnd   = %g\n",rnd);
+  int value = ((int) (((double) range)*rnd));
+  //fprintf(stdout,"value = %d\n",value);
+  int res = value + min;
+
+  //fprintf(stdout,"rand  = %d\n",res);
+  if (res != excl1) {
+    return generateRandomValueExcl(excl1, lflag, uflag, lbound, ubound);
+  } else {
+    return res;
+  }
+}
+
 void apply_feedback(stop_feedback_t fb) {
   USER_rindex[0] = fb.rindex;
   USER_rvalue[0] = fb.rvalue;
