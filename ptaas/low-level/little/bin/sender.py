@@ -8,7 +8,7 @@ import socket
 ###############################################################################
 
 class c_little_output_str(Structure):
-    _fields_ = [("i"    , c_int)
+    _fields_ = [("out"    , c_int)
     ]
 
 _liblittle = CDLL('../lib/liblittle.so')
@@ -31,7 +31,7 @@ class SENDER():
     def getTestVector(self):
         global c_compute_output
         c_output = c_compute_output()
-        print('{:+04d}'.format(c_output.i))
+        print('{:+04d}'.format(c_output.out))
         return c_output
 
 ###############################################################################
