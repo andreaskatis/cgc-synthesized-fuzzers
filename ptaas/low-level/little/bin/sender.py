@@ -31,7 +31,7 @@ class SENDER():
     def getTestVector(self):
         global c_compute_output
         c_output = c_compute_output()
-        print('{:+04d}'.format(c_output.out))
+        print('Output : {:+04d}'.format(c_output.out))
         return c_output
 
 ###############################################################################
