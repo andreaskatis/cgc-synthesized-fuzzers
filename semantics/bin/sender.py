@@ -7,78 +7,45 @@ import socket
 
 ###############################################################################
 
-class c_stop_output_str(Structure):
-    _fields_ = [("xrw"    , c_int),
-                ("xact"   , c_int),
-                ("xindex" , c_int),
-                ("xvalue" , c_int)
+class c_semantics_output_str(Structure):
+    _fields_ = [("median" , c_int),
+                ("fuzz"   , c_int)
     ]
 
-class c_stop_feedback_str(Structure):
-    _fields_ = [("rindex" , c_int),
-                ("rvalue" , c_int)
+class c_semantics_input_str (Structure):
+    _fields_ = [("val"    , c_int)
     ]
 
-class c_stop_input_str (Structure):
-    _fields_ = [("cmd"    , c_int)
-    ]
+_libsemantics = CDLL('../lib/libsemantics.so')
 
-_libstop = CDLL('../lib/libstop.so')
-
-c_compute_output = _libstop.compute_output
-c_compute_output.restype  = c_stop_output_str
-c_compute_output.argtypes = [c_stop_input_str]
-
-c_apply_feedback  = _libstop.apply_feedback
-c_apply_feedback.argtypes  = [c_stop_feedback_str]
+c_compute_output = _libsemantics.compute_output
+c_compute_output.restype  = c_semantics_output_str
+c_compute_output.argtypes = [c_semantics_input_str]
 
 ###############################################################################
 
 class SENDER():
 
     def __init__(self,relay_address):
-        self.relay_address = relay_address
-
-    def openSockets(self):
-        #self.wsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #self.wsock.connect(self.relay_address)
         pass
 
-    def closeSockets(self):
-        self.wsock.close()
-
     def run(self):
-        self.openSockets()
         try:
             while True:
                 c_output = self.getTestVector()
-                self.processTestVector(c_output)
         finally:
-            self.closeSockets()
+            pass
 
     def getTestVector(self):
         global c_compute_output
-        global c_apply_feedback
-        c_feedback = c_stop_feedback_str(random.randint(0,15),random.randint(0,15))
-        c_apply_feedback(c_feedback)
-        c_input = c_stop_input_str(random.randint(0,5))
+        c_input = c_semantics_input_str(random.randint(-100,100))
         c_output = c_compute_output(c_input)
-        print('{:d}  {:04d}  {:04d}  {:d}  {:d}  {:04d}  {:012d}'.format(c_input.cmd,c_feedback.rindex,c_feedback.rvalue,c_output.xact,c_output.xrw,c_output.xindex,c_output.xvalue))
+        print('{:d}  {:d}'.format(c_input.val,c_output.median,c_output.fuzz))
         return c_output
-
-    def processTestVector(self,c_output):
-        msg = ""
-        msg += ' USER_xact {}'.format(c_output.xact)
-        msg += ' USER_xrw {}'.format(c_output.xrw)
-        msg += ' USER_xindex {}'.format(c_output.xindex)
-        msg += ' USER_xvalue {}'.format(c_output.xvalue)
-        #print('output : ' + msg)
-        #self.wsock.send(bytes(msg, 'utf-8'))
-        pass
 
 ###############################################################################
 def main():
-    parser = argparse.ArgumentParser(description="STOP Relay")
+    parser = argparse.ArgumentParser(description="SEMANTICS Relay")
     parser.add_argument('-r', '--relay',
                         required=False,
                         help="The URL of the Relay [localhost]")
