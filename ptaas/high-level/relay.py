@@ -47,7 +47,8 @@ class RELAY():
         ##
         ## We don't really want to print/return this .. we want to "send" it somewhere ..
         ##
-        print(msg)
+        sys.stdout.write(msg)
+        sys.stdout.flush()
         ##self.wsock.send(bytes(msg, 'utf-8'))
 
 ###############################################################################
