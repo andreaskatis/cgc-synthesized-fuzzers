@@ -12,6 +12,7 @@ The following instructions work from the current directory.
 To run the high-level fuzzer:
 
   `make black`
+  
   `./bin/fuzz.sh | nc localhost 5001`
 
 To run the low-level fuzzer:
