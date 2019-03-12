@@ -3,6 +3,21 @@
 This directory contains a variety of specifications that we synthesize
 to fuzz the CGC PTaaS server
 
+## Demonstration
+
+Start the CGC Server on your local machine.
+
+The following instructions work from the current directory.
+
+To run the high-level fuzzer:
+
+  `make black`
+  `./bin/fuzz.sh | nc localhost 5001`
+
+To run the low-level fuzzer:
+
+  `./low-level/genimp.py | nc locahost 5001`
+
 ## black
 
 This directory contains a very simple, very abstract black-box model
