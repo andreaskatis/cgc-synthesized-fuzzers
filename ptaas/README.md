@@ -5,7 +5,8 @@ to fuzz the CGC PTaaS server
 
 ## Demonstration
 
-Start the CGC Server on your local machine.
+Start the [CGC Server](https://gitlab.com/RMN-SC/cgc-server) on your local machine.
+
 
 The following instructions work from the current directory.
 
