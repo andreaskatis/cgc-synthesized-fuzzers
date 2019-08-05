@@ -1,0 +1,10 @@
+all: lib_Simple_Integer_Calculator.so
+	cp lib_Simple_Integer_Calculator.so ../lib/.
+	cp sender.py ../bin/.
+	cp relay.py ../bin/.
+
+lib_Simple_Integer_Calculator.so: simple_integer_calculator.c wrapper.c
+	$(CC) -fPIC -shared -o lib_Simple_Integer_Calulator.so simple_integer_calculator.c wrapper.c
+
+clean:
+	$(RM) -rf lib_Simple_Integer_Calculator.so
