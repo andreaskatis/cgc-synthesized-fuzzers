@@ -39,47 +39,22 @@ class RELAY():
         cmd = ["!aaaa", "a_aaa", "aa<aa", "aaaBa", "aaaac"][int(msg["command"])]
         size = int(msg["size"])
         deck = []
-
-        sizeHex = hex(size)
-        sizeFront = ""
-        sizeBack = ""
-        if (len(sizeHex) == 3):
-            sizeFront += "\\" + "x0" + sizeHex[-1]
-            sizeBack += "\\" + "x00"
-        elif (len(sizeHex) == 4):
-            sizeFront += "\\" + "x" + sizeHex[-2:]
-            sizeBack += "\\" + "x00"
-        else:
-            sizeFront += "\\" + "x" + sizeHex[-2:]
-            sizeBack += "\\" + "x0" + sizeHex[-3]
-
         for cha in msg["deck"]:
             deck.append(int(cha))
-        chaDeck = ""
+        chaDeck = []
+        chaConv = ["\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0a"]
         for num in deck:
-            num += 1 #Undo the -1 operation in sender
-            if (num == 10):
-                chaDeck += "\\" + "x10"
-            else:
-                hexNum = hex(num)
-                chaDeck += "\\" + "x0" + hexNum[-1]
+            chaDeck.append(chaConv[num])
         #print(cmd, size, chaDeck)
 
         msg = ""
         if cmd == "!aaaa": #New deck
-            msg = "{cmd}".format(cmd = cmd)
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            msg = "{front}\n{back}".format(front = sizeFront, back = sizeBack)
-            sys.stdout.write(msg)
-            sys.stdout.flush()
-            msg = "{deck}".format(deck = chaDeck[:size])
-            sys.stdout.write(msg)
-            sys.stdout.flush()
+            msg += "{cmd}\n{size}\n{deck}".format(cmd = cmd, size = size, deck = chaDeck[:size])
         else: #Any other command
             msg += "{cmd}".format(cmd = cmd)
-            sys.stdout.write(msg)
-            sys.stdout.flush()
+
+        sys.stdout.write(msg)
+        sys.stdout.flush()
 
 ###############################################################################
 def main():
