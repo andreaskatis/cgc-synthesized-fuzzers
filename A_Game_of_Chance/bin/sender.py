@@ -40,7 +40,7 @@ class SENDER():
         deckStr = ""
         for num in struc.deck:
              #print(num)
-             deckStr += "{}".format(num - 1) #Makes processing easier in the relay
+             deckStr += "{}".format(num - 2)
         #print(deckStr)
         msg = ""
         msg += " command {}".format(struc.command)
