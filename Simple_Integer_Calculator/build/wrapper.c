@@ -1,5 +1,6 @@
-#include "ptaas.h"
+#include "simple_integer_calculator.h"
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct strChar {
     int cha1;
@@ -51,6 +52,7 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 msg_t step() {
+    srand(time(NULL));
     updateFunction();
     msg_t msg;
     msg.length          = length[0];
