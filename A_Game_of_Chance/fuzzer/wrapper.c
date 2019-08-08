@@ -1,5 +1,6 @@
 #include "agameofchance.h"
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct msg {
 	int command;
@@ -17,6 +18,7 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 msg_t step() {
+	srand(time(NULL));
 	updateFunction();
 	msg_t msg;
 	msg.command    = option[0];
