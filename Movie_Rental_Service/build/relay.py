@@ -64,7 +64,7 @@ class RELAY():
                 sys.stdout.flush
 
                 if (passLength > 64): #Vulnerability exploit, successful login
-                    if (admin == 1 || admin == 3): #add (1) or update (3) have almost identical msg formats
+                    if (admin == 1 or admin == 3): #add (1) or update (3) have almost identical msg formats
                         msg = "{admin}".format(admin = admin)
                         sys.stdout.write(msg)
                         sys.stdout.flush
