@@ -72,7 +72,7 @@ class RELAY():
                     msg = "{logout}".format(logout = 5)
                     sys.stdout.write(msg)
                     sys.stdout.flush
-                elif (user == 2 || user == 4): #Read (2) and delete (4) have the same msg format
+                elif (user == 2 or user == 4): #Read (2) and delete (4) have the same msg format
                     msg = "{msgID}".format(msgID = messID)
                     sys.stdout.write(msg)
                     sys.stdout.flush
