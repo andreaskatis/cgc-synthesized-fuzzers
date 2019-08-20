@@ -8,8 +8,8 @@ import time
 ###############################################################################
 class c_msg(Structure):
     _fields_ = [("command"  , c_int), #Some int 0-4
-		("size"     , c_int), #Some int 0-1000
-                ("deck"     , c_int * 1000), #Int arr of fixed size 1000
+		("size"     , c_int), #Some int 0-256
+                ("deck"     , c_int * 256), #Int arr of fixed size 256
             ]
 
 _libagoc = CDLL('../lib/libagoc.so')
@@ -25,11 +25,11 @@ class SENDER():
         pass
 
     def run(self):
-        print("Sender starting")
+        #print("Sender starting")
         while True:
-            print("Getting test vector")
+            #print("Getting test vector")
             msg = self.getTestVector()
-            print("Processing test vector")
+            #print("Processing test vector")
             self.processTestVector(msg)
             time.sleep(0.1)
 
@@ -40,7 +40,7 @@ class SENDER():
         deckStr = ""
         for num in struc.deck:
              #print(num)
-             deckStr += "{}".format(num - 2)
+             deckStr += "{}".format(num % 9) #Makes processing easier in the relay
         #print(deckStr)
         msg = ""
         msg += " command {}".format(struc.command)
@@ -54,7 +54,7 @@ class SENDER():
 
 ###############################################################################
 def main():
-    parser = argparse.ArgumentParser(description="GoC Relay")
+    parser = argparse.ArgumentParser(description="Game_of_Chance Relay")
     sender = SENDER()
     sender.run()
 
