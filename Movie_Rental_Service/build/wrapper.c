@@ -1,6 +1,7 @@
 #include "movie_rental_service.h"
 #include <stdlib.h>
-#include <time.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 
 typedef struct passStr {
   int length;
@@ -34,13 +35,15 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
   int min = lflag ? lbound : lbound+1;
   int max = uflag ? ubound : ubound-1;
   int range = max - min + 1;
+  int s;
+  syscall(SYS_getrandom, &s, sizeof(int), 1);
   double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
+  if (rnd < 0) rnd = rnd * -1;
   int value = ((int) (((double) range)*rnd));
   return value + min;
 }
 
 msg_t step() {
-  srand(time(NULL));
   updateFunction();
   msg_t msg;
   msg.main                  = main[0];
