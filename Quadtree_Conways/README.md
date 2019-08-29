@@ -1,4 +1,4 @@
-## Movie_Rental_Service fuzzer
+## Quadtree_Conways fuzzer
 
 ## Application information
 Quadtree_Conways simultes a "space shooter" style of game based on Conway's game of life. The game takes place on an 8192X8192 board, and at the start of the game the application creates 25 "runners" (which follow the rules laid out in Conway's game of life). The player then can shoot at runners, reveal the board (which unlocks the bomb and run options), bomb a specific location (bombs explode after 10 steps, destroying a 3X3 square centered on the bomb), and run the simulation for some amount of steps. Once the simulation has been run, the board is hidden once again and the player is returned to the firing screen. The game lasts a total of 10000 steps, at which point the player is booted to the game over screen and is given the option to start a new game or exit the application.
