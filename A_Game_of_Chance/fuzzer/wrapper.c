@@ -23,6 +23,7 @@ extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound)
 }
 
 msg_t step() {
+	srand(time(NULL));
 	updateFunction();
 	msg_t msg;
 	msg.command    = option[0];
