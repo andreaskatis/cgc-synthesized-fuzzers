@@ -14,19 +14,26 @@ Dive_Logger has two vulnerabilities:
 2. Time values for dives are entered as a string in the format "hr:mn:sc" before being processed and sanitized. The application checks the upper bound of the time value, but has no checks for the lower bound, meaning even extremely large negative values for time are considered valid. The application then stores the time in a string buffer of a fixed size. If the time values are large enough (all three values are negative integers having at least eight digits), the string buffer will overflow and the application will crash.
 
 ## Fuzzer information
-The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. 500 ints are used as ascii converted chas for five different strings, and another five ints are used to limit the lengths of those strings. One int is used as the main menu command, three ints are used to represent the month, day, and year of a date value, 32 are used to represent the 32 hex values required by the download dive function, and one is used as an index value. Another three ints are used to represent the ZIP code, phone number, and PADI number in the change diver info function, and the last nine ints are used to represent the various information required by the log new dive function.
+The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
+
+    Variable Name       Usage                                                       Expected Range      Instances
+    main                Represents the main command                                 [0,7]               1
+    length              Limits the length of strings                                [1, 100]            5
+    cha                 Represents chars based on ASCII conversion                  [32, 126]           500
+    month               Represents the month                                        [1, 12]             1
+    day                 Represents the day                                          [1, 31]             1
+    year                Represents the year                                         [1950, 2050]        1
+    genericIn           Represents various input values (ie ZIP code, O2 %, etc)    unconstrained       9
+    time                Represents a time value                                     unconstrained       3
+    hexVal              Represents a hex value                                      [0, 255]            32
+    index               Represents the dive index                                   [1, 20]             1
 
 Due to the large amount of varying input the application requires for each different command, fuzzed values are reused where possible. Specifically, two strings and the date value are shared between the change diver info and log new dive, and the index value of edit, print, and remove dives are shared. Log new dive, Edit dives, and Download dives also share the same fuzzer input. Due to the fact that only one command is called at a time, this does not present a problem in exploring possible execution states.
 
-The relay always sends the main menu command and then determines what to send based on that value.
-
+    The relay always sends the main menu command and then determines what to send based on that value.
     If main is 0 (change diver info) or 1 (log new dive), the relay will send the information that the application requests for the specific command.
-
     If main is 2 (download dive), the relay splits the fuzzed hex values into eight sets of four consecutive values, sends the eight sets consecutively one at a time, then sends "\x00\x00\x00\x00" at which point the relay acts as though log new dive had been selected.
-
     If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
-
-Due to the way the relay functions, the fuzzer need only send 556 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
 ## Running the fuzzer
 The fuzzer files must be named dive_logger.c in order to build properly.
