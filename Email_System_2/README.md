@@ -16,31 +16,31 @@ Due to the range of possible usernames and passwords, the relay keeps an array o
 
 The relay always starts by sending main as the initial command
 
-If main == 1: Send the generated username and password and update the corresponding arrays in the relay
+    If main == 1: Send the generated username and password and update the corresponding arrays in the relay
 
-If main == 2:
+    If main == 2:
 
-	If index1 > userArr.length: Send the generated username and password (invalid username login attempt)
+	    If index1 > userArr.length: Send the generated username and password (invalid username login attempt)
 
-	Else if flag == 1: Send userArr[index1] and the generated password (valid username with invalid password)
+	    Else if flag == 1: Send userArr[index1] and the generated password (valid username with invalid password)
 
-	Else: Send userArr[index1] with the corresponding password (valid login attempt), then send the user command
+    	Else: Send userArr[index1] with the corresponding password (valid login attempt), then send the user command
 
-		If user == 1:
+	    	If user == 1:
 
-			If index2 > userArr.length: Send the generated username and password (send message to invalid user) then logout
+	    		If index2 > userArr.length: Send the generated username and password (send message to invalid user) then logout
 
-			Else: Send userArr[index1] and the generated password (send random message to valid user) then logout
+	    		Else: Send userArr[index1] and the generated password (send random message to valid user) then logout
 
-		If user == 2 or 6: Send the message ID then logout
+	    	If user == 2 or 6: Send the message ID then logout
 
-		If user == 3, 4, or 5: Logout
+	    	If user == 3, 4, or 5: Logout
 
-		If user == 7: Do nothing
+	    	If user == 7: Do nothing
 
-		If user == 8: Clear the username and password arrays
+	    	If user == 8: Clear the username and password arrays
 
-If main == 3: Clear the username and password arrays
+    If main == 3: Clear the username and password arrays
 
 Due to the way the relay functions, the fuzzer need only send 206 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
