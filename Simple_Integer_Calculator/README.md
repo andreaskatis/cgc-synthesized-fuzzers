@@ -1,4 +1,5 @@
 ## Simple_Integer_Calculator fuzzer
+https://github.com/trailofbits/cb-multios/tree/master/challenges/simple_integer_calculator
 
 ## Application information
 Simple_Integer_Calculator is a simple calculator, capable of performing integer addition (add, +), subtraction (sub, -), multiplication (mul, *), division (div, /), modulus (mod, %), and equality (equals, ==), along with manipulation of strings and booleans. Along with the previous functions, the Simple_Integer_Calculator is capable of the length (len), type (type), and int cast (int) operations, as well as variable definition (var) and subsequent use.
@@ -9,14 +10,11 @@ The Simple_Integer_Calculator has four vulnerabilities, three of which are expos
 Example: var add = 2 (valid input)
          2 add 3 returns 3 (treating add as a var, the application prints the right most operand)
          2 + 3 crashes
-
 2. Simple_Integer_Calculator splits inputs into two categories, functions (such as add or *) and operands (the ints, str, bools, and vars). If a single input contains more than 32 of either, the application crashes.
 Example: 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 crashes
          Though there are only 17 functions, there are 34 operands, causing the crash
-
 3. If the user calls the var command with no arguments, the application crashes.
 Example: var crashes
-
 4. The user is able to call the multiply function with str and int (str * int). In this case, the Simple_Integer_Calculator will simply repeat the string x many times and return the repeated string. Depending on the length of the string and size of the int, the application can crash. This is the vulnerability that the fuzzer is unable to expose, due to the fuzzer limiting the length of the input string.
 
 ## Fuzzer information
