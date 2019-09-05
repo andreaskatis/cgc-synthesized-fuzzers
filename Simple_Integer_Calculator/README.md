@@ -47,7 +47,7 @@ The relay then takes these inputs and categorizes them into 17 expressions, with
     Append (length) number of expressions into one string, separated by spaces (ie if length == 2, use 2 expressions)
     Send the string to the application as an input
 
-Additionally, the relay contains checks so as to ensure that all integers are within expected parameters. Thus, the fuzzer need only send 290 randomly generated integers in order to function.
-
 ## Running the fuzzer
-The fuzzer files must be named simple_integer_calculator.c in order to build properly. Run the make file found in the build folder. Once the build process is complete, run fuzz.sh in the bin folder.
+The fuzzer files must be named simple_integer_calculator.c in order to build properly.
+Run the make file found in the build folder.
+Once the build process is complete, run fuzz.sh in the bin folder.
