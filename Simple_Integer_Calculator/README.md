@@ -6,15 +6,9 @@ Simple_Integer_Calculator is a simple calculator, capable of performing integer 
 
 ## Vulnerabilities
 The Simple_Integer_Calculator has four vulnerabilities, three of which are exposed by this particular fuzzer.
-1. The user is able to redefine calculator commands via the var functionality. If the written command is then called, the application treats it as a variable instead of the command. However, if the symbolic command is called, the application crashes.
-    Example: var add = 2 (valid input)
-         2 add 3 returns 3 (treating add as a var, the application prints the right most operand)
-         2 + 3 crashes
-2. Simple_Integer_Calculator splits inputs into two categories, functions (such as add or *) and operands (the ints, str, bools, and vars). If a single input contains more than 32 of either, the application crashes.
-    Example: 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 2 + 2 crashes
-         Though there are only 17 functions, there are 34 operands, causing the crash
+1. The user is able to redefine calculator commands via the var functionality (eg "var add = 2"). If the written command is then called (ie "add"), the application treats it as a variable instead of the command. However, if the symbolic command is called (ie "+"), the application crashes.
+2. Simple_Integer_Calculator splits inputs into two categories, functions (such as add or *) and operands (the ints, str, bools, and var names that the calculator operates on). If a single input contains more than 32 of either, the application crashes.
 3. If the user calls the var command with no arguments, the application crashes.
-    Example: var crashes
 4. The user is able to call the multiply function with str and int (str * int). In this case, the Simple_Integer_Calculator will simply repeat the string x many times and return the repeated string. Depending on the length of the string and size of the int, the application can crash. This is the vulnerability that the fuzzer is unable to expose, due to the fuzzer limiting the length of the input string.
 
 ## Fuzzer information
