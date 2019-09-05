@@ -20,11 +20,11 @@ Due to the large amount of varying input the application requires for each diffe
 
 The relay always sends the main menu command and then determines what to send based on that value.
 
-If main is 0 (change diver info) or 1 (log new dive), the relay will send the information that the application requests for the specific command.
+    If main is 0 (change diver info) or 1 (log new dive), the relay will send the information that the application requests for the specific command.
 
-If main is 2 (download dive), the relay splits the fuzzed hex values into eight sets of four consecutive values, sends the eight sets consecutively one at a time, then sends "\x00\x00\x00\x00" at which point the relay acts as though log new dive had been selected.
+    If main is 2 (download dive), the relay splits the fuzzed hex values into eight sets of four consecutive values, sends the eight sets consecutively one at a time, then sends "\x00\x00\x00\x00" at which point the relay acts as though log new dive had been selected.
 
-If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
+    If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
 
 Due to the way the relay functions, the fuzzer need only send 556 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
