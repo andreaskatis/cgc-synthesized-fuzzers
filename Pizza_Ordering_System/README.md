@@ -17,51 +17,40 @@ Pizza_Ordering_System has one vulnerability.
 ## Fuzzer information
 Due to the recursive nature of many of the menus (input password, main menu, choose topping/sauce, and finalize order all have a variety of options that either end with the user on the same menu or transitioning between the four menus), the fuzzer reads the output of the application and searches for a unique substring to determine which menu it is currently on and then sends that information to the relay. The unique substrings are as follows:
 
-    If the fuzzer is on the password menu:		"Enter system password:"
+    Menu                Substring                   Expected Int
+    Password		    "Enter system password:"    0
+    Main		        "1. Input Order"            1
+    Toppings/Sauce  	"1. Add Toppings"           2
+    Finalize Order 	    "1. Add another Pizza"      3
 
-    If the fuzzer is on the main menu:		"1. Input Order"
+The fuzzer sends 13 ints, which the relay converts into an expression that can be read by the application. The usage and expected range of the generated ints are as follows:
 
-    If the fuzzer is on the toppings/sauce menu:	"1. Add Toppings"
+    Variable Name       Usage                                                   Expected Range      Instances
+    menu                Represent which menu the application is on              See above           1
+    length              Limits the length of the input string                   [1, 9]              1
+    cha                 Represents chars using ASCII conversion                 [32, 126]           9
+    input               Represents various input values for the application     Unconstrained       3
 
-    If the fuzzer is on the finalize order menu:	"1. Add another Pizza"
+Because of the large variety of inputs that the various menus require, the relay uses modulus to constrain the generated inputs (labelled lvl1In, lvl2In, and lvl3In) to whatever is needed by the application at that time.
 
-The fuzzer sends 13 ints, which the relay converts into an expression that can be read by the application. One int is used to represent which menu the application is currently on, nine ints are used as ascii converted characters a string, and three ints are used as generic inputs to be further refined by the relay depending on the menu requirements, defined as lvl1In, lvl2In, and lvl3In.
-
-    The relay first checks the menu int and then decides how to proceed from there.
+The relay first checks the menu int and then decides how to proceed from there.
 
     If menu == 0 (Input password): lvl1In = lvl1In % 2
-
     	If lvl1In == 0, input the valid password (pizzapass). Otherwise, send the generic string as an invalid password
-
     If menu == 1 (Main menu): lvl1In = lvl1In % 8 + 1
-
     	If lvl1In == 1 (New order): Send the generic string as the order name, lvl2In = lvl2In % 3 + 1
-
     		If lvl2In == 1 (Choice pie): Send lvl3In % 2 + 1
-
     		If lvl2In == 2 (Choice sub): Send 1/1, 1/2, 2/1, or 2/2 depending on lvl3In % 4
-
     		If lvl2In == 3 (Choice bowl): Send lvl3In % 2 + 1
-
     	If lvl1In == 2, 3, or 5 (Update order, view one, and delete one all have the same input format): Send lvl2In % 10 as index
-
     	If lvl1In == 6 (Clear all): Send lvl2In % 2 as confirmation choice
-
     If menu == 2 (Topping/sauce): lvl1In = lvl1In % 5 + 1
-
     	If lvl1In == 1 (Add topping): Use lvl2In to choose which category of topping and lvl3In to choose the exact topping to add
-
     	If lvl1In == 3 (Add sauce): Use lvl2In to choose which category of sauce and lvl3In to choose the exact sauce to add
-
     	If lvl1In == 2 or 4 (Remove topping/sauce): Send lvl2In % 10 as index
-
     If menu == 3 (Finalize order): lvl1In = lvl1In % 3 + 1
-
     	If lvl1In == 1 (Add another pizza): Act as though new order from main menu was chosen, but do not send the order name
-
     	If lvl1In == 3 (Remove pizza): Send lvl2In % 10 as index
-
-Due to the way the relay functions, the fuzzer need only send 13 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
 ## Running the fuzzer
 The fuzzer files must be named pizza_ordering_system.c in order to build properly.
