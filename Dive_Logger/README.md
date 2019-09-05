@@ -16,17 +16,17 @@ Dive_Logger has two vulnerabilities:
 ## Fuzzer information
 The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
 
-    Variable Name       Usage                                                       Expected Range      Instances
-    main                Represents the main command                                 [0,7]               1
-    length              Limits the length of strings                                [1, 100]            5
-    cha                 Represents chars based on ASCII conversion                  [32, 126]           500
-    month               Represents the month                                        [1, 12]             1
-    day                 Represents the day                                          [1, 31]             1
-    year                Represents the year                                         [1950, 2050]        1
-    genericIn           Represents various input values (ie ZIP code, O2 %, etc)    unconstrained       9
-    time                Represents a time value                                     unconstrained       3
-    hexVal              Represents a hex value                                      [0, 255]            32
-    index               Represents the dive index                                   [1, 20]             1
+    Variable Name       Usage                                       Expected Range      Instances
+    main                Represents the main command                 [0,7]               1
+    length              Limits the length of strings                [1, 100]            5
+    cha                 Represents chars based on ASCII conversion  [32, 126]           500
+    month               Represents the month                        [1, 12]             1
+    day                 Represents the day                          [1, 31]             1
+    year                Represents the year                         [1950, 2050]        1
+    genericIn           Represents various input values             unconstrained       9 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
+    time                Represents a time value                     unconstrained       3
+    hexVal              Represents a hex value                      [0, 255]            32
+    index               Represents the dive index                   [1, 20]             1
 
 Due to the large amount of varying input the application requires for each different command, fuzzed values are reused where possible. Specifically, two strings and the date value are shared between the change diver info and log new dive, and the index value of edit, print, and remove dives are shared. Log new dive, Edit dives, and Download dives also share the same fuzzer input. Due to the fact that only one command is called at a time, this does not present a problem in exploring possible execution states.
 
