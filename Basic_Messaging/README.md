@@ -9,7 +9,10 @@ Basic_Messaging has one vulnerability.
 1. Whenever one logs into an account, all unread messages are displayed. If the number of unread messages exceeds 255, the application crashes.
 
 ## Fuzzer information
-The fuzzer sends 106 ints, which the relay then converts into a readable expression for the application. Two ints are used as command inputs (main and user), one int is used to limit the length of the string, 100 ints are used to represent the chars of said string, two ints are used as index pointers, and one int is used as a message id.
+The fuzzer sends 106 ints, which the relay then converts into a readable expression for the application. The use and expected ranges for the generated ints are as follows:
+
+    Variable Name       Usage               Expected Range
+    test
 
 Due to the range of possible usernames, the relay keeps an array of used usernames to refer to when in the process of interacting with the application.
 
@@ -38,8 +41,6 @@ The relay takes these variables and converts them into a message for the applica
     	Else: Send the general string
 
     If main == 3: Clear the usernames array
-
-Due to the way the relay functions, the fuzzer need only send 106 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
 ## Running the fuzzer
 The fuzzer files must be named basic_messaging.c in order to build properly.
