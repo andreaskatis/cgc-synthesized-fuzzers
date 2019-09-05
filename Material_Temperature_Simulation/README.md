@@ -12,31 +12,30 @@ Material_Temperature_Simulation has two vulnerabilities.
 2. Normally, thermal conductivity is expected to be positive. However, there is no check to confirm this when creating a custom material, allowing the user to input negative thermal conductivities. This causes heat to flow from lower heat values to higher heat values, an impossibility in real world physics. The application also limits the heat of a specific material to 373 degrees Celsius. However, because of the previous exploit, the temperature in a specific area of a custom material can rise above 373 degrees Celsius, crashing the application.
 
 ## Fuzzer information
-The fuzzer sends 225 ints, which the relay then converts into a useable expression for the application. One int is used to choose the material (one of the preprogrammed materials or a custom one), 16 ints are used as the values for the thermal and heat capacities of the custom material, three are used as the dimensions of the material, two are used as flags for the isothermic and constant energy source choices, two are used to choose how many temperatures to send for isothermic and constant energy sources, 200 are used as the temperatures values for the isothermic and constant energy sources, and one is used for the runtime of the simulation.
+The fuzzer sends 225 ints, which the relay then converts into a useable expression for the application. The usage and expected ranges for the generated ints are as follows:
 
-Due to the restrictions on thermal and heat capacity values, the fuzzer only generates the first int. Afterwards, the fuzzer generates ints between 75-125, and the relay uses those as percentage values to calculate the next value in the sequence for capacities by multiplying it with the previous value.
+    Variable Name       Usage                                                                               Expected Range      Instances
+    material            Represents initial material choice                                                  [1, 4]              1
+    capInitial          Represents the initial value for the thermal/heat capacities                        Unconstrained       2
+    capModifier         Used as a modifier to generate the remaining values for thermal/heat capacities     [75, 125]           14
+    dimension           Represents the x, y, and z dimensions of the material                               [1, 15]             3
+    flag                Flags y/n for the isothermic/constant energy source choice                          [0, 1]              2
+    length              Limits the amount of temperature values to send                                     [1, 100]            2
+    temp                Represents a single temperature value                                               [-172, 373]         200
+    runtime             How long to run the simulation for                                                  [1, 10000]          1
+
+Due to the restrictions on thermal and heat capacities, the relay takes the initial seed value for each and then multiplies them by the modifiers (converted to percentage values) to get the other seven values needed by the application.
 
     The relay always begins by sending the material. If material == 4, the relay sends the values for a custom material.
-
         First, the eight values for thermal capacity and then the eight values for heat capacity.
-
     The relay then sends the dimensions of the material in x,y,z format.
-
     The relay then sends y/n based on the isothermic flag (0 = y, 1 = n).
-
         If yes, the relay only sends the first temperature value.
-
         If no, the relay sends the first n temperature values, where n is a generated number between 1 and 100 provided by the fuzzer.
-
     The relay then sends y/n based on the isothermic flag (0 = y, 1 = n).
-
-        If yes, the relay sends the first n temeprature values, where n is a generated number between 1 and 100 provided by the fuzzer.
-
+        If yes, the relay sends the first n temperature values, where n is a generated number between 1 and 100 provided by the fuzzer.
         If no, the relay sends nothing.
-
     The relay finally sends the runtime, and sends a newline command runtime / 10 times.
-
-Due to the way the relay functions, the fuzzer need only send 225 ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
 ## Running the fuzzer
 The fuzzer files must be named material_temperature_simulation.c in order to build properly.
