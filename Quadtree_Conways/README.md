@@ -13,17 +13,18 @@ Quadtree_Conways has one vulnerability.
 1. If two bombs are placed such that their explosions overlap the application improperly handles the destruction of a single cell multiple times, causing the application to crash.
 
 ## Fuzzer information
-The fuzzer sends four ints, which the relay then converts into a useable expression for the application. One int is used as the command, two ints are used as the x and y coordinates, and one int is used as a runtime value.
+The fuzzer sends four ints, which the relay then converts into a useable expression for the application. The use and expected ranges for the generated ints are as follows:
+
+    Variable Name       Usage                               Expected Range      Instances
+    command             Represents the menu command         [1, 5]              1
+    coordinate          Represents the x and y coordinates  [0, 8192]           2
+    runtime             How long to run the simulation for  [100, 1000]         1
 
 The relay was configured in this fashion (as opposed to attempting to fuzz an entire run of the game) due to the enormous amount of possible messages and the consistent nature of the input requests at all stages of the game.
 
     The relay always sends the command int, then, based on that, decides whether to send the coordinates, the runtime value, or nothing.
-
         If the command int is 1, the relay sends the coordinates (formatted as x,y)
-    
         If the command int is 3, the relay sends the runtime value.
-
-Due to the way the relay functions, the fuzzer need only send four ints within the range [INT_MIN, INT_MAX]. The relay takes the generated integer and manipulates them (primary using modulo) into the required range for the application.
 
 ## Running the fuzzer
 The fuzzer files must be named quadtree_conways.c in order to build properly.
