@@ -19,27 +19,16 @@ Due to the range of possible usernames, the relay keeps an array of used usernam
 The relay takes these variables and converts them into a message for the application following these rules:
 
     Send main as the initial command
-
     If main == 1: Pass the general string as a username, update the username array with the new username
-
     If main == 2: Check the first index value
-
     	If index1 < userArr.length: Pass the corresponding username, send the user command
-
     		If user == 1: Check the second index value
-
     			If index2 < userArr.length: Pass the corresponding username, send the general string
-
     			Else: Send the general string
-
     		If user == 2 or 4: Send the message ID
-
     		If user == 6: Clear the usernames array
-
     		Logout of user (send 5) if anything other than 5 or 6 was selected
-
     	Else: Send the general string
-
     If main == 3: Clear the usernames array
 
 ## Running the fuzzer
