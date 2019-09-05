@@ -24,7 +24,7 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        menu = int(msg["menu"]) % 4
+        menu = int(msg["menu"])
         genStr = msg["genStr"]
         lvl1In = int(msg["lvl1In"])
         lvl2In = int(msg["lvl2In"])
