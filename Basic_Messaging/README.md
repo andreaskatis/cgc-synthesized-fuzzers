@@ -1,14 +1,15 @@
 ## Basic_Messaging fuzzer
+https://github.com/trailofbits/cb-multios/tree/master/challenges/basic_messaging
 
 ## Application information
-Basic_Messaging creates a ui that allows a user to create accounts within a messaging service and login to those accounts to send, read, list, and delete messages between them.
+Basic_Messaging creates a UI that allows a user to create accounts within a messaging service and login to those accounts to send messages to other users and read, list, and delete messages sent to them.
 
 ## Vulnerabilities
 Basic_Messaging has one vulnerability.
 1. Whenever one logs into an account, all unread messages are displayed. If the number of unread messages exceeds 255, the application crashes.
 
 ## Fuzzer information
-The fuzzer sends 106 ints, which the sender then categorizes into each of the elements that the application calls for. Two ints are used as command inputs (main and user), one int is used to limit the length of the string, 100 ints are used to represent the chars of said string, two ints are used as index pointers, and one int is used as a message id.
+The fuzzer sends 106 ints, which the relay then converts into a readable expression for the application. Two ints are used as command inputs (main and user), one int is used to limit the length of the string, 100 ints are used to represent the chars of said string, two ints are used as index pointers, and one int is used as a message id.
 
 Due to the range of possible usernames, the relay keeps an array of used usernames to refer to when in the process of interacting with the application.
 The relay takes these variables and converts them into a message for the application following these rules:
