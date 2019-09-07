@@ -45,12 +45,12 @@ class c_msg(Structure):
                 ("index"      , c_int)
             ]
 
-_lib_Diver_Logger = CDLL('../lib/lib_Diver_Logger.so')
-_lib_Diver_Logger.step.restype  = c_msg
+_lib_Dive_Logger = CDLL('../lib/lib_Dive_Logger.so')
+_lib_Dive_Logger.step.restype  = c_msg
 
 def cstep():
-    global _lib_Diver_Logger
-    return _lib_Diver_Logger.step()
+    global _lib_Dive_Logger
+    return _lib_Dive_Logger.step()
 
 ###############################################################################
 class SENDER():
@@ -132,7 +132,7 @@ class SENDER():
 
 ###############################################################################
 def main():
-    parser = argparse.ArgumentParser(description="Diver_Logger Relay")
+    parser = argparse.ArgumentParser(description="Dive_Logger Relay")
     sender = SENDER()
     sender.run()
 
