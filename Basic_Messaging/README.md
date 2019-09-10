@@ -15,13 +15,13 @@ Basic_Messaging has one vulnerability.
 ## Fuzzer information
 The fuzzer sends 106 ints, which the relay then converts into a readable expression for the application. The use and expected ranges for the generated ints are as follows:
 
-    Variable Name       Usage                                       Expected Range                      Instances
-    main                Represent which main command to send        [1, 3]                              1
-    length              Limit the length of the input string        [1, 100]                            1
-    cha                 Represents chars using ASCII conversion     [32, 126]                           100
-    index               Refers to an index in the user array        Unconstrained positive integer      1
-    user                Represent which user command to send        [1, 6]                              1
-    id                  Represents a specific message ID            [1, 255]                            1
+    Variable Name       Usage                                       Expected Range      Instances
+    main                Represent which main command to send        [1, 3]              1
+    length              Limit the length of the input string        [1, 100]            1
+    cha                 Represents chars using ASCII conversion     [32, 126]           100
+    index               Refers to an index in the user array        [0, +∞]             1
+    user                Represent which user command to send        [1, 6]              1
+    id                  Represents a specific message ID            [1, 255]            1
 
 Due to the range of possible usernames, the relay keeps an array of used usernames to refer to when in the process of interacting with the application. Because of this, the relay uses a modulo function to limit the index values to userArr.length + 1.
 
