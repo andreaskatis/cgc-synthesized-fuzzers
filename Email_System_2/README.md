@@ -16,14 +16,14 @@ Email_System_2 has two vulnerabilities.
 ## Fuzzer information
 The fuzzer sends 206 ints, which the relay then converts into a useable message for the application. The use and expected ranges for the generated ints are as follows:
 
-    Variable Name       Usage                                                       Expected Range              Instances
-    main                Represent which main command to send                        [1, 3]                      1
-    length              Limits the length of the generated strings                  [1, 100]                    2
-    cha                 Represents chars using ASCII conversion                     [32, 126]                   200
-    index               Refers to an index in the user array                        Unconstrained positive int  2
-    flag                Flags whether or not to give a valid password upon login    [0, 1]                      1
-    user                Represent which user command to send                        [1, 8]                      1
-    id                  Represents a specific message ID                            [0, 21]                     1
+    Variable Name       Usage                                                       Expected Range      Instances
+    main                Represent which main command to send                        [1, 3]              1
+    length              Limits the length of the generated strings                  [1, 100]            2
+    cha                 Represents chars using ASCII conversion                     [32, 126]           200
+    index               Refers to an index in the user array                        [0, +∞)             2
+    flag                Flags whether or not to give a valid password upon login    [0, 1]              1
+    user                Represent which user command to send                        [1, 8]              1
+    id                  Represents a specific message ID                            [0, 21]             1
 
 Due to the range of possible usernames and passwords, the relay keeps an array of used usernames and their corresponding passwords to refer to when in the process of interacting with the application. Because of this, the relay uses a modulo function to limit the index values to userArr.length + 1.
 
