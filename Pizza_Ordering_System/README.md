@@ -18,10 +18,10 @@ Pizza_Ordering_System has one vulnerability.
 Due to the recursive nature of many of the menus (input password, main menu, choose topping/sauce, and finalize order all have a variety of options that either end with the user on the same menu or transitioning between the four menus), the fuzzer reads the output of the application and searches for a unique substring to determine which menu it is currently on and then sends that information to the relay. The unique substrings are as follows:
 
     Menu                Substring                   Expected Int
-    Password		    "Enter system password:"    0
-    Main		        "1. Input Order"            1
+    Password		"Enter system password:"    0
+    Main		"1. Input Order"            1
     Toppings/Sauce  	"1. Add Toppings"           2
-    Finalize Order 	    "1. Add another Pizza"      3
+    Finalize Order 	"1. Add another Pizza"      3
 
 The fuzzer sends 13 ints, which the relay converts into an expression that can be read by the application. The usage and expected range of the generated ints are as follows:
 
@@ -54,5 +54,7 @@ The relay first checks the menu int and then decides how to proceed from there.
 
 ## Running the fuzzer
 The fuzzer files must be named pizza_ordering_system.c in order to build properly.
+
 Run the make file found in the build folder.
+
 Once the build process is complete, run fuzz.sh in the bin folder.
