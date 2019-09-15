@@ -24,7 +24,7 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        length = int(msg["length"]) % 200 + 1
+        length = int(msg["length"])
         testStr = msg["testStr"]
 
         msg = ""
