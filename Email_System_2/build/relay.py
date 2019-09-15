@@ -6,8 +6,8 @@ import base64
 
 ###############################################################################
 class RELAY():
-    usernames
-    passwords
+    usernames = []
+    passwords = []
 
     def __init__(self):
         usernames = []
