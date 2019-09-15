@@ -24,20 +24,20 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        main = int(msg["main"]) % 5 + 1
-        movID = int(msg["movID"]) % 100 + 1
-        flag = int(msg["flag"]) % 2
-        passLength = int(msg["passLength"]) % 130 + 1
+        main = int(msg["main"])
+        movID = int(msg["movID"])
+        flag = int(msg["flag"])
+        passLength = int(msg["passLength"])
         passStr = msg["passStr"]
-        admin = int(msg["admin"]) % 5 + 1
-        titleLength = int(msg["titleLength"]) % 100 + 1
+        admin = int(msg["admin"])
+        titleLength = int(msg["titleLength"])
         title = msg["title"]
-        descLength = int(msg["descLength"]) % 100 + 1
+        descLength = int(msg["descLength"])
         desc = msg["desc"]
-        year = int(msg["year"]) % 216 + 1800
-        score = int(msg["score"]) % 100 + 1
-        genre = int(msg["genre"]) % 5 + 1
-        rating = int(msg["rating"]) % 5 + 1
+        year = int(msg["year"])
+        score = int(msg["score"])
+        genre = int(msg["genre"])
+        rating = int(msg["rating"])
 
         msg = ""
         if (main == 1): #list
