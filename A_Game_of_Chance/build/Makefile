@@ -3,8 +3,8 @@ all: lib_A_Game_of_Chance.so
 	cp sender.py ../bin/.
 	cp relay.py ../bin/.
 
-lib_A_Game_of_Chance.so: agameofchance.c wrapper.c
-	$(CC) -fPIC -shared -o lib_A_Game_of_Chance.so agameofchance.c wrapper.c
+lib_A_Game_of_Chance.so: A_Game_of_Chance.c wrapper.c
+	$(CC) -fPIC -shared -o lib_A_Game_of_Chance.so A_Game_of_Chance.c wrapper.c
 
 clean:
 	$(RM) -rf lib_A_Game_of_Chance.so

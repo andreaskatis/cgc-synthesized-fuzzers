@@ -36,6 +36,6 @@ Due to the large amount of varying input the application requires for each diffe
     If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
 
 ## Running the fuzzer
-The fuzzer files must be named dive_logger.c in order to build properly.
+The fuzzer files must be named Dive_Logger.c in order to build properly.
 Run the make file found in the build folder.
 Once the build process is complete, run fuzz.sh in the bin folder.
