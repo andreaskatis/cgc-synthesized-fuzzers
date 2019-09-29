@@ -21,5 +21,7 @@ The relay then takes these values, creates a string 200 chas long and truncates 
 
 ## Running the fuzzer
 The fuzzer files must be named palindrome.c in order to build properly.
+
 Run the make file found in the build folder.
+
 Once the build process is complete, run fuzz.sh in the bin folder.

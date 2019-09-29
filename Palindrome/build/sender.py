@@ -35,7 +35,7 @@ class SENDER():
     def processTestVector(self,struc):
         testStr = ""
         for num in struc.chas:
-            asc = chr(int(num) % 95 + 32)
+            asc = chr(int(num))
             testStr += asc
 
         msg = ""

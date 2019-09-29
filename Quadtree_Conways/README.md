@@ -28,5 +28,7 @@ The relay was configured in this fashion (as opposed to attempting to fuzz an en
 
 ## Running the fuzzer
 The fuzzer files must be named quadtree_conways.c in order to build properly.
+
 Run the make file found in the build folder.
+
 Once the build process is complete, run fuzz.sh in the bin folder.

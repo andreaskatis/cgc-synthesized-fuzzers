@@ -6,7 +6,7 @@ import base64
 
 ###############################################################################
 class RELAY():
-    usernames
+    usernames = []
 
     def __init__(self):
         usernames = []
@@ -27,13 +27,13 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        main = int(msg["main"]) % 3 + 1
-        strLength = int(msg["strLength"]) % 100 + 1
+        main = int(msg["main"])
+        strLength = int(msg["strLength"])
         genStr = msg["genStr"][:strLength]
         index1 = int(msg["index1"]) % (len(usernames) + 1)
         index2 = int(msg["index2"]) % (len(usernames) + 1)
-        user = int(msg["user"]) % 6 + 1
-        messID = int(msg["id"]) % 255 + 1
+        user = int(msg["user"])
+        messID = int(msg["id"])
 
         msg = ""
         msg = "{main}".format(main = main)
@@ -66,9 +66,9 @@ class RELAY():
                         msg = "{username}".format(username = usernames[index2])
                         sys.stdout.write(msg)
                         sys.stdout.flush
-                        msg = "{message}".format(message = genStr)
-                        sys.stdout.write(msg)
-                        sys.stdout.flush
+                    msg = "{message}".format(message = genStr)
+                    sys.stdout.write(msg)
+                    sys.stdout.flush
                     msg = "{logout}".format(logout = 5)
                     sys.stdout.write(msg)
                     sys.stdout.flush
