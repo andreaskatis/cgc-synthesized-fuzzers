@@ -33,9 +33,9 @@ def main(argv):
 	sender = ["./sender.py"]
 	relay = "./relay.py"
 	with open("results.txt", "a") as debug:
-		proc = subprocess.Popen(sender, stdout = debug)
-		proc.wait()
-		fuzzData = proc.stdout()
+		proc = subprocess.Popen(sender, stdout = debug, stderr = debug)
+		(out, fuzzData) = proc.communicate()
+		print(out, fuzzData)
 
 	"""
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
