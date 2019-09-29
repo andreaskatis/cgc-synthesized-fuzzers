@@ -1,0 +1,67 @@
+Specification ptaas
+
+Imports:
+
+Units:
+
+Types:
+
+  location  : {x: int | -256 <= x and x <= 256}
+
+  bit       : {x: int |    0 <= x and x <= 1  }
+  byte      : {x: int |    0 <= x and x <= 255}
+  penta     : {x: int |    0 <= x and x <= 4  }
+  intensity : {x: int |    0 <= x and x <= 255}
+
+  tuple : record {x : location, 
+			      y : location, 
+				  z : location}
+
+  rgb : record {r : intensity, 
+			    g : intensity, 
+				b : intensity}
+				  
+Constants:
+
+Patterns:
+
+Inputs:
+  q       : bit
+  r       : bit
+  
+Outputs:
+  object  : penta
+  spex    : bit
+  parm    : byte
+  position: tuple
+  vector  : tuple
+  color   : rgb
+  emission: rgb
+  
+State:
+
+Macros:
+
+Assumptions:
+
+Requirements:
+  object_type     :    0 <= object      and object     <= 4
+  spex_type       :    0 <= spex        and spex       <= 1
+  parm_type       :    0 <= parm        and parm       <= 255
+  position_x_type : -256 <= position.x  and position.x <= 256
+  position_y_type : -256 <= position.y  and position.y <= 256
+  position_z_type : -256 <= position.z  and position.z <= 256
+  vector_x_type   : -256 <= vector.x    and vector.x   <= 256
+  vector_y_type   : -256 <= vector.y    and vector.y   <= 256
+  vector_z_type   : -256 <= vector.z    and vector.z   <= 256
+  color_r_type    :    0 <= color.r     and color.r    <= 256
+  color_g_type    :    0 <= color.g     and color.g    <= 256
+  color_b_type    :    0 <= color.b     and color.b    <= 256
+  emission_r_type :    0 <= emission.r  and emission.r <= 256
+  emission_g_type :    0 <= emission.g  and emission.g <= 256
+  emission_b_type :    0 <= emission.b  and emission.b <= 256
+  q_bit           : (q == 0) implies (object <= 3)
+  r_bit           : (r == 0) implies (object <> 3)
+  
+Properties:
+
