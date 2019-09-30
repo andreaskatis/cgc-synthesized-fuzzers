@@ -42,8 +42,7 @@ class SENDER():
 
     def run(self):
         msg = self.getTestVector()
-        encdmsg = self.processTestVector(msg)
-        return encdmsg
+        self.processTestVector(msg)
 
     def getTestVector(self):
         return cstep()
@@ -66,15 +65,15 @@ class SENDER():
         msg += ' emission.g {}'.format(struc.emission.g)
         msg += ' emission.b {}'.format(struc.emission.b)
         e64 = base64.b64encode(msg.encode()).decode()
-        return e64;
-        # sys.stdout.write(e64 + '\n')
-        # sys.stdout.flush()
+        #return e64;
+        sys.stdout.write(e64 + '\n')
+        sys.stdout.flush()
 
 ###############################################################################
 def main():
     parser = argparse.ArgumentParser(description="PTAAS Relay")
     sender = SENDER()
-    return sender.run()
+    sender.run()
 
 ###############################################################################
 if __name__ == "__main__":

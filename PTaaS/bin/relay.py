@@ -9,14 +9,13 @@ class RELAY():
     def __init__(self):
         pass
 
-    def run(self, fuzzdata):
-        msg = self.getTestVector(fuzzdata)
-        rlmsg = self.processTestVector(msg)
-        return rlmsg
+    def run(self):
+        msg = self.getTestVector()
+        self.processTestVector(msg)
 
-    def getTestVector(self, fuzzdata):
-        #payload = stdin.readline()
-        payload = fuzzdata
+    def getTestVector(self):
+        payload = stdin.readline()
+        #payload = fuzzdata
         un64 = base64.b64decode(payload.encode()).decode()
         pairlist = un64.split()
         assert(0 == (len(pairlist) % 2))
@@ -48,17 +47,17 @@ class RELAY():
         ##
         ## We don't really want to print/return this .. we want to "send" it somewhere ..
         ##
-        # sys.stdout.write(msg)
-        # sys.stdout.flush()
+        sys.stdout.write(msg)
+        sys.stdout.flush()
         ##self.wsock.send(bytes(msg, 'utf-8'))
-        return msg
+        #return msg
 
 ###############################################################################
-def main(fuzzdata):
+def main():
     parser = argparse.ArgumentParser(description="PTAAS Relay")
     relay = RELAY()
-    return relay.run(fuzzdata)
+    relay.run()
 
 ###############################################################################
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1]))
+    sys.exit(main())
