@@ -30,14 +30,13 @@ def main(argv):
 	os.chdir("../bin")
 
 	#Connect to server
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect((HOST, PORT))
-	debug = open("debug_start.txt", "a")
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect((HOST, PORT))
+	debug = open("debug_run.txt", "a")
 	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n".format(bench = benchmark, port = PORT, sid = SID))
 	servConnect = "localhost:{port}/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
-	debug = open("debug_run.txt", "a")
 	while True:
 		# proc = subprocess.check_output(["./fuzz.sh"])
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
