@@ -29,26 +29,31 @@ def main(argv):
 
 	os.chdir("../bin")
 
-	#Run fuzzer
+	#Connect to server
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-		#Connect to server
 		s.connect((HOST, PORT))
 		with open("debug_start.txt", "a") as debug:
 			debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n".format(bench = benchmark, port = PORT, sid = SID))
 		servConnect = "localhost:{port}/session/{sid}".format(port = PORT, sid = SID)
 
-		while True:
-			with open("debug_start.txt", "a") as debug: #Run the fuzzer once
-				proc = subprocess.Popen(["./fuzz.sh", "|", "nc localhost {}".format(PORT), stdout = debug)
+		#Run fuzzer
+		with open("debug_run.txt", "a") as debug:
+			while True:
+				proc = subprocess.Popen(["./fuzz.sh", "|", "nc localhost {}".format(PORT)], stdout = debug)
 				proc.wait()
 				debug.write("\n")
-			with open("results.txt", "a") as data: #Collect and print data to results
-				coverage = subprocess.check_output(["curl", servConnect + "/coverage"])
-				results.write({}.format(coverage))
-				results.write("\n")
-				events = subprocess.check_output(["curl", servConnect + "/events"])
-				results.write({}.format(coverage))
-				results.write("\n\n")
+
+				#Collect data and print to results
+				with open("results.txt", "a") as data:
+					coverage = subprocess.check_output(["curl", servConnect + "/coverage"], stdout = debug)
+					results.write({}.format(coverage))
+					results.write("\n")
+					debug.write("\n")	
+
+					events = subprocess.check_output(["curl", servConnect + "/events"], stdout = debug)
+					results.write({}.format(coverage))
+					results.write("\n\n")
+					debug.write("\n")
 
 if (__name__ == "__main__"):
 	main(sys.argv[1])
