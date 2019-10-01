@@ -21,39 +21,46 @@ def main(argv):
 	#Make fuzzer
 	os.chdir(benchDir + "/build")
 	args = ["make"]
-	with open("debug_make.txt", "a") as debug:
-		debug.write("Running make for {}:\n".format(benchmark))
-		proc = subprocess.Popen(args, stdout = debug)
-		proc.wait()
-		debug.write("\n")
+	debug = open("debug_make.txt", "a")
+	# with open("debug_make.txt", "a") as debug:
+	debug.write("Running make for {}:\n".format(benchmark))
+	proc = subprocess.Popen(args, stdout = debug)
+	proc.wait()
+	debug.write("\n")
 
 	os.chdir("../bin")
 
 	#Connect to server
-	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-		s.connect((HOST, PORT))
-		with open("debug_start.txt", "a") as debug:
-			debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n".format(bench = benchmark, port = PORT, sid = SID))
-		servConnect = "localhost:{port}/session/{sid}".format(port = PORT, sid = SID)
+	# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((HOST, PORT))
+	debug = open("debug_start.txt", "a")
+	# with open("debug_start.txt", "a") as debug:
+	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n".format(bench = benchmark, port = PORT, sid = SID))
+	servConnect = "localhost:{port}/session/{sid}".format(port = PORT, sid = SID)
 
-		#Run fuzzer
-		with open("debug_run.txt", "a") as debug:
-			while True:
-				proc = subprocess.Popen(["./fuzz.sh", "|", "nc localhost {}".format(PORT)], stdout = debug)
-				proc.wait()
-				debug.write("\n")
+	#Run fuzzer
+	debug = open("debug_run.txt", "a")
+	# with open("debug_run.txt", "a") as debug:
+	while True:
+		proc = subprocess.Popen(["./fuzz.sh", "|", "nc localhost {}".format(PORT)], stdout = debug)
+		proc.wait()
+		debug.write("\n")
 
-				#Collect data and print to results
-				with open("results.txt", "a") as data:
-					coverage = subprocess.check_output(["curl", servConnect + "/coverage"], stdout = debug)
-					results.write({}.format(coverage))
-					results.write("\n")
-					debug.write("\n")	
+		#Collect data and print to results
+		# with open("results.txt", "a") as data:
+		data = open("results.txt", "a")
+		coverage = subprocess.check_output(["curl", servConnect + "/coverage"])
+		debug.write({}.format(coverage))
+		results.write({}.format(coverage))
+		results.write("\n")
+		debug.write("\n")	
 
-					events = subprocess.check_output(["curl", servConnect + "/events"], stdout = debug)
-					results.write({}.format(coverage))
-					results.write("\n\n")
-					debug.write("\n")
+		events = subprocess.check_output(["curl", servConnect + "/events"])
+		debug.write({}.format(coverage))
+		results.write({}.format(coverage))
+		results.write("\n\n")
+		debug.write("\n")
 
 if (__name__ == "__main__"):
 	main(sys.argv[1])
