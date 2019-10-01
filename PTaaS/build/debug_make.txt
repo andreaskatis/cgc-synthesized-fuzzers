@@ -226,3 +226,9 @@ cp sender.py ../bin/.
 cp relay.py ../bin/.
 Running make for PTaaS:
 
+cc -fPIC -shared -o libptaas.so ptaas.c wrapper.c
+cp libptaas.so ../lib/.
+cp sender.py ../bin/.
+cp relay.py ../bin/.
+Running make for PTaaS:
+
