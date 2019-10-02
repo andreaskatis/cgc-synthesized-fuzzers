@@ -1,0 +1,10 @@
+cp libptaas.so ../lib/.
+cp sender.py ../bin/.
+cp relay.py ../bin/.
+Running make for PTaaS:
+
+cp libptaas.so ../lib/.
+cp sender.py ../bin/.
+cp relay.py ../bin/.
+Running make for PTaaS:
+

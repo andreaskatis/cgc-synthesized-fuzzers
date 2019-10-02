@@ -42,7 +42,7 @@ def main(argv):
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
 		# debug.write("\n")
-		s.sendall(stdout)
+		sock.sendall(stdout)
 
 		# Collect data and print to results		
 		# data = open("results.txt", "a")
@@ -61,5 +61,6 @@ def main(argv):
 		# results.write("\n\n")
 		# debug.write("\n")
 		# data.close()
+
 if (__name__ == "__main__"):
 	main(sys.argv[1])
