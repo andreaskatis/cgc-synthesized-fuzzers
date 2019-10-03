@@ -7,7 +7,7 @@ import sys
 from subprocess import Popen, PIPE
 HOST = '0.0.0.0' #The server's hostname or IP address
 
-def parseCoverage(coverage, result):
+def parseCoverage(coverage, data):
 	executed = 0
 	total = 0
 	srcLine = 0
@@ -15,14 +15,15 @@ def parseCoverage(coverage, result):
 		if (srcLine == -1):
 			break
 		srcLine = coverage.find("src", srcLine)
-		execStart = coverage.find("\"lines_executed\":")
-		result.write(str(execStart) + "/" + coverage[execStart] + " ")
+		execStart = coverage.find("\"lines_executed\":", srcLine)
+		data.write(str(execStart) + "/" + coverage[execStart] + " ")
+		break
+	data.write("\n")
 
-	result.write("\n")
 	for i in range(0, len(coverage)):
 		if (coverage[i] == "{"):
-			result.write("\n")
-		result.write(coverage[i])
+			data.write("\n")
+		data.write(coverage[i])
 
 def main(argv):
 	benchmark = argv
