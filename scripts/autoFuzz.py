@@ -7,23 +7,19 @@ import sys
 from subprocess import Popen, PIPE
 HOST = '0.0.0.0' #The server's hostname or IP address
 
-def parseCoverage(coverage, data):
+def parseCoverage(coverage):
 	executed = 0
 	total = 0
-	srcLine = 0
-	while True:
-		if (srcLine == -1):
-			break
-		srcLine = coverage.find("src", srcLine)
+	totalEnd = 0
+	while coverage.find("src", totalEnd) > 0:
+		srcLine = coverage.find("src", totalEnd)
 		execStart = coverage.find("\"lines_executed\":", srcLine)
-		data.write(str(execStart) + "/" + coverage[execStart] + " ")
-		break
-	data.write("\n")
+		execEnd = coverage.find(",\"lines_total\"", execStart)
+		totalEnd = coverage.find("},", execEnd)
 
-	for i in range(0, len(coverage)):
-		if (coverage[i] == "{"):
-			data.write("\n")
-		data.write(coverage[i])
+		executed += int(coverage[execStart + 17:execEnd])
+		total += int(coverage[execEnd + 15:totalEnd])
+	return (executed, total)
 
 def main(argv):
 	benchmark = argv
@@ -56,7 +52,7 @@ def main(argv):
 
 	#Run fuzzer
 	data = open("results.txt", "a")
-	while True:
+	for i in range(0, 10000, 1):
 		# proc = subprocess.check_output(["./fuzz.sh"])
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
@@ -64,16 +60,12 @@ def main(argv):
 
 		# Collect data and print to results
 		coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
-		data.write(coverage)
-		data.write("\n")	
+		(executed, total) = parseCoverage(coverage)
+		data.write("exec: " + str(executed) + " total: " + str(total) + "\n")
 
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
-		data.write(coverage)
-		data.write("\n\n")
-		break #Temporary measure, force while to run once to simplify debugging
-
-	result = open("temp.txt", "w")
-	parseCoverage(coverage, result)
+		data.write(events)
+		data.write("\n")
 
 if (__name__ == "__main__"):
 	main(sys.argv[1])
