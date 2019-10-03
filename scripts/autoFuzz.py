@@ -21,6 +21,19 @@ def parseCoverage(coverage):
 		total += int(coverage[execEnd + 15:totalEnd])
 	return (executed, total)
 
+def parseEvents(events):
+	sigStart = events.find("SIGSEGV")
+	if (sigStart < 0):
+		return 0
+	else:
+		sigStart += 9 #Move start to start of number
+		sigEnd = events.find(",", sigStart)
+		if (sigEnd < 0): #If SIGSEGV is the last set of events, end with "}" instead of ","
+			sigEnd = events.find("}", sigStart)
+
+		SIGSEGV = events[sigStart:sigEnd]
+		return SIGSEGV
+
 def main(argv):
 	benchmark = argv
 	benchDir = "../" + benchmark
@@ -35,24 +48,24 @@ def main(argv):
 	#Make fuzzer
 	os.chdir(benchDir + "/build")
 	args = ["make"]
-	debug = open("debug_make.txt", "a")
-	debug.write("Running make for {}:\n".format(benchmark))
+	#debug = open("debug_make.txt", "a")
+	#debug.write("Running make for {}:\n".format(benchmark))
 	proc = subprocess.Popen(args, stdout = debug)
 	proc.wait()
-	debug.write("\n")
+	#debug.write("\n")
 
 	os.chdir("../bin")
 
 	#Connect to server
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((HOST, PORT))
-	debug = open("debug_run.txt", "a")
-	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
+	#debug = open("debug_run.txt", "a")
+	#debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
 	data = open("results.txt", "a")
-	for i in range(0, 1000, 1):
+	for i in range(0, 100, 1):
 		# proc = subprocess.check_output(["./fuzz.sh"])
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
@@ -64,7 +77,8 @@ def main(argv):
 		data.write("exec: " + str(executed) + " total: " + str(total) + "\n")
 
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
-		data.write(events)
+		SIGSEGV = parseEvents(events)
+		data.write(str(SIGSEGV))
 		data.write("\n")
 
 if (__name__ == "__main__"):
