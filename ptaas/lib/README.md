@@ -1,1 +1,0 @@
-# Shared Library Directory

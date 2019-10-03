@@ -52,7 +52,7 @@ def main(argv):
 
 	#Run fuzzer
 	data = open("results.txt", "a")
-	for i in range(0, 10000, 1):
+	for i in range(0, 1000, 1):
 		# proc = subprocess.check_output(["./fuzz.sh"])
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
