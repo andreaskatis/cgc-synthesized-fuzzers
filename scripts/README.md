@@ -7,6 +7,9 @@ The script prints the coverage and event information into an excel file (results
 
 	run        exec         crash      total: {Total lines}
 	{currRun}  {linesExec}  {crashes}
+	.
+	.
+	.
 
 The script only accepts integer values for the time argument.
 
