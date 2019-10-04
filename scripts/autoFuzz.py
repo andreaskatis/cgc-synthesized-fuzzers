@@ -64,22 +64,26 @@ def main(benchmark, runtime):
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
-	data = open("results.txt", "a")
+	data = open("results.csv", "a")
 	endTime = datetime.now() + timedelta(minutes = int(runtime)) #Set endTime
+	data.write("run\texec\tcrash\t\ttotal:\t")
+	run = 0 #Run counter
 	while datetime.now() < endTime: #Run until timeout
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
 		sock.sendall(stdout)
 
-		# Collect data and print to results
+		#Collect data
 		coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
 		(executed, total) = parseCoverage(coverage)
-		data.write("exec: " + str(executed) + " total: " + str(total) + "\n")
-
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
 		SIGSEGV = parseEvents(events)
-		data.write("crash: " + str(SIGSEGV))
-		data.write("\n\n")
+
+		#Write data to results
+		if (run == 0): #Print total lines upon discovery
+			data.write("{total}\n".format(total = total))
+		data.write("{run}\t{executed}\t{crash}\n".format(run = run, executed = executed, crash = SIGSEGV))
+		run += 1
 
 if (__name__ == "__main__"):
 	main(sys.argv[1], sys.argv[2])
