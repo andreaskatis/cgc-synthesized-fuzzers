@@ -4,6 +4,7 @@ import re
 import subprocess
 import socket
 import sys
+from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 HOST = '0.0.0.0' #The server's hostname or IP address
 
@@ -31,11 +32,10 @@ def parseEvents(events):
 		if (sigEnd < 0): #If SIGSEGV is the last set of events, end with "}" instead of ","
 			sigEnd = events.find("}", sigStart)
 
-		SIGSEGV = events[sigStart:sigEnd]
+		SIGSEGV = int(events[sigStart:sigEnd])
 		return SIGSEGV
 
-def main(argv):
-	benchmark = argv
+def main(benchmark, runtime):
 	benchDir = "../" + benchmark
 
 	#Retrieving a port assigned for the new session
@@ -48,25 +48,25 @@ def main(argv):
 	#Make fuzzer
 	os.chdir(benchDir + "/build")
 	args = ["make"]
-	#debug = open("debug_make.txt", "a")
-	#debug.write("Running make for {}:\n".format(benchmark))
+	debug = open("debug_make.txt", "a")
+	debug.write("Running make for {}:\n".format(benchmark))
 	proc = subprocess.Popen(args, stdout = debug)
 	proc.wait()
-	#debug.write("\n")
+	debug.write("\n")
 
 	os.chdir("../bin")
 
 	#Connect to server
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((HOST, PORT))
-	#debug = open("debug_run.txt", "a")
-	#debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
+	debug = open("debug_run.txt", "a")
+	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
 	data = open("results.txt", "a")
-	for i in range(0, 100, 1):
-		# proc = subprocess.check_output(["./fuzz.sh"])
+	endTime = datetime.now() + timedelta(minutes = int(runtime)) #Set endTime
+	while datetime.now() < endTime: #Run until timeout
 		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
 		sock.sendall(stdout)
@@ -78,8 +78,8 @@ def main(argv):
 
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
 		SIGSEGV = parseEvents(events)
-		data.write(str(SIGSEGV))
-		data.write("\n")
+		data.write("crash: " + str(SIGSEGV))
+		data.write("\n\n")
 
 if (__name__ == "__main__"):
-	main(sys.argv[1])
+	main(sys.argv[1], sys.argv[2])

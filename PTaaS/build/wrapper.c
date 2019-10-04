@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-#include <time.h>
-#include <sys/time.h>
-#include <stdio.h>
+//#include <sys/random.h>
+
 typedef struct tuple {
   int x;
   int y;
@@ -27,42 +26,28 @@ typedef struct msg {
   rgb_t   emission;
 } msg_t;
 
-
 extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
-  int min = lflag ? lbound : lbound+1;
-  int max = uflag ? ubound : ubound-1;
-  int range = max - min + 1;
-  double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
-  int value = ((int) (((double) range)*rnd));
-  return value + min;
+  if (lbound == 0 && ubound == 0) {
+    int s;
+    syscall(SYS_getrandom, &s, sizeof(int), 1);
+    return rand();
+  } else {
+    int min = lflag ? lbound : lbound+1;
+    int max = uflag ? ubound : ubound-1;
+    int range = max - min + 1;
+    int s;
+    syscall(SYS_getrandom, &s, sizeof(int), 1);
+    double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
+    if (rnd < 0) rnd = rnd * -1;
+    int value = ((int) (((double) range)*rnd));
+    return value + min;
+  }
 }
 
-// extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
-//   if (lbound == 0 && ubound == 0) {
-//     int s;
-//     syscall(SYS_getrandom, &s, sizeof(int), 1);
-//     return rand();
-//   } else {
-//     int min = lflag ? lbound : lbound+1;
-//     int max = uflag ? ubound : ubound-1;
-//     int range = max - min + 1;
-//     int s;
-//     syscall(SYS_getrandom, &s, sizeof(int), 1);
-//     double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
-//     if (rnd < 0) rnd = rnd * -1;
-//     int value = ((int) (((double) range)*rnd));
-//     return value + min;
-//   }
-// }
-
 msg_t step() {
-  struct timeval t1;
-  gettimeofday(&t1, NULL);
-  srand(t1.tv_usec * t1.tv_sec);
   updateFunction();
   msg_t msg;
   msg.object      = object[0];
-  printf("%d\n", msg.object);
   msg.spec        = spec[0];
   msg.parm        = parm[0];
   msg.position.x  = position_x[0];
@@ -79,8 +64,3 @@ msg_t step() {
   msg.emission.b  = emission_b[0];;
   return msg;
 }
-
-// int main() {
-//   step();
-//   return 0;
-// }

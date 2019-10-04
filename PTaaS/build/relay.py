@@ -24,8 +24,8 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        obj      = ['s','p','c','r','q'][int(msg['object']) % 5]
-        spec     = ['d','s'][int(msg['spec']) % 2]
+        obj      = ['s','p','c','r','q','e'][int(msg['object']) % 6]
+        spec     = ['d','s','e'][int(msg['spec']) % 3]
         parm     = int(msg['parm'])
         parm     = '{:f}'.format(parm/256.0) if obj == 'c' else '{:d}'.format(parm)
         position = '{x:d}, {y:d}, {z:d}'.format(x=int(msg['position.x']),y=int(msg['position.y']),z=int(msg['position.z']))
