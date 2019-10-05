@@ -20,13 +20,13 @@ def parseCoverage(coverage, debug):
 
 		executed += int(coverage[execStart + 17:execEnd])
 		total += int(coverage[execEnd + 15:totalEnd])
-	debug.write("{executed} {total} ".format(executed = executed, total = total))
+	#debug.write("{executed} {total} ".format(executed = executed, total = total))
 	return (executed, total)
 
 def parseEvents(events, debug):
 	sigStart = events.find("SIGSEGV")
 	if (sigStart < 0):
-		debug.write("0\n")
+		#debug.write("0\n")
 		return 0
 	else:
 		sigStart += 9 #Move start to start of number
@@ -35,7 +35,7 @@ def parseEvents(events, debug):
 			sigEnd = events.find("}", sigStart)
 
 		SIGSEGV = int(events[sigStart:sigEnd])
-		debug.write("{SIG}\n".format(SIG = SIGSEGV))
+		#debug.write("{SIG}\n".format(SIG = SIGSEGV))
 		return SIGSEGV
 
 def main(benchmark, runtime):
@@ -82,13 +82,18 @@ def main(benchmark, runtime):
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
 		SIGSEGV = parseEvents(events, debug)
 
-		debug.write("run: {run} {executed} {total} {SIGSEGV}\n\n".format(run = run, executed = executed, total = total, SIGSEGV = SIGSEGV))
+		#debug.write("run: {run} {executed} {total} {SIGSEGV}\n\n".format(run = run, executed = executed, total = total, SIGSEGV = SIGSEGV))
 
 		#Write data to results
 		if (run == 0): #Print total lines upon discovery
 			data.write("{total}\n".format(total = total))
 		data.write("{run}\t{executed}\t{crash}\n".format(run = run, executed = executed, crash = SIGSEGV))
 		run += 1
+
+	for i in range(0, len(coverage)):
+		if (coverage[i] == "{"):
+			debug.write("\n")
+		debug.write(coverage[i])
 
 if (__name__ == "__main__"):
 	main(sys.argv[1], sys.argv[2])
