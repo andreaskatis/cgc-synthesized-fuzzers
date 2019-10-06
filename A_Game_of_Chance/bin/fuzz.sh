@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./sender.py | ./relay.py
+./sender.py "$1" | ./relay.py

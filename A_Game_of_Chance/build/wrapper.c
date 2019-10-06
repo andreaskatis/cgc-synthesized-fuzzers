@@ -2,32 +2,50 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/syscall.h>
-
+#include <time.h>
 typedef struct msg {
 	int command;
 	int size;
 	int deck[127];
 } msg_t;
 
-extern int generateRandomValue(_Bool lflag, _Bool uflag, int lbound, int ubound) {
+extern double generateRandomValue(_Bool lflag, _Bool uflag, double lbound, double ubound) {
   if (lbound == 0 && ubound == 0) {
-    int s;
-    syscall(SYS_getrandom, &s, sizeof(int), 1);
-    return rand();
+    return (double) rand();
   } else {
-    int min = lflag ? lbound : lbound+1;
-    int max = uflag ? ubound : ubound-1;
-    int range = max - min + 1;
-    int s;
-    syscall(SYS_getrandom, &s, sizeof(int), 1);
+      double min = lflag ? lbound : lbound+0.001;
+      double max = uflag ? ubound : ubound-0.001;
+      double range = max - min;
+      // int s;
+      // syscall(SYS_getrandom, &s, sizeof(int), 1);
+      double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
+      double value = ((double) (((double) range)*rnd));
+      // printf("Lflag : %d, Uflag : %d, Lbound : %f, Ubound : %f, Value : %f\n", lflag, uflag, lbound, ubound, value+min);
+      return value + min;
+  }
+}
+extern double generateRandomValueExcl(double excl1, _Bool lflag, _Bool uflag, double lbound, double ubound) {
+  double min = (lflag && excl1 != lbound) ? lbound : lbound+0.001;
+  double max = (uflag && excl1 != ubound) ? ubound : ubound-0.001;
+  double range = max - min;
+  if (range == 1) {
+    return max;
+  } else {
     double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
-    if (rnd < 0) rnd = rnd * -1;
-    int value = ((int) (((double) range)*rnd));
-    return value + min;
+    double value = ((double) (((double) range)*rnd));
+    double res = value + min;
+    if (res == excl1) {
+      generateRandomValueExcl(excl1, lflag, uflag, min, max);
+    } else {
+      // printf("Excl1 : %f, Lflag : %d, Uflag : %d, Lbound : %f, Ubound : %f, Value : %f\n", excl1, lflag, uflag, lbound, ubound, res);
+      return res;
+    }
   }
 }
 
-msg_t step() {
+msg_t step(_Bool cvrg) {
+	srand(time(NULL));
+	cvg[0] = cvrg;
 	updateFunction();
 	msg_t msg;
 	msg.command   = option[0];

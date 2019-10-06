@@ -80,7 +80,7 @@ def main(benchmark, runtime):
 
 		#Collect data
 		coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
-		(executed, total) = parseCoverage(coverage)
+		(executed, total) = parseCoverage(coverage, debug)
 		if preexecuted < executed :
 			cvg = 1
 		else :

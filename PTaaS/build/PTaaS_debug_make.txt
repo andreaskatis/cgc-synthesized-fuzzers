@@ -1,4 +1,3 @@
-cc -fPIC -shared -o lib_PTaaS.so PTaaS.c wrapper.c
 cp lib_PTaaS.so ../lib/.
 cp sender.py ../bin/.
 cp relay.py ../bin/.
