@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 HOST = '0.0.0.0' #The server's hostname or IP address
 
-def parseCoverage(coverage):
+def parseCoverage(coverage, debug):
 	executed = 0
 	total = 0
 	totalEnd = 0
@@ -20,11 +20,13 @@ def parseCoverage(coverage):
 
 		executed += int(coverage[execStart + 17:execEnd])
 		total += int(coverage[execEnd + 15:totalEnd])
+	#debug.write("{executed} {total} ".format(executed = executed, total = total))
 	return (executed, total)
 
-def parseEvents(events):
+def parseEvents(events, debug):
 	sigStart = events.find("SIGSEGV")
 	if (sigStart < 0):
+		#debug.write("0\n")
 		return 0
 	else:
 		sigStart += 9 #Move start to start of number
@@ -33,6 +35,7 @@ def parseEvents(events):
 			sigEnd = events.find("}", sigStart)
 
 		SIGSEGV = int(events[sigStart:sigEnd])
+		#debug.write("{SIG}\n".format(SIG = SIGSEGV))
 		return SIGSEGV
 
 def main(benchmark, runtime):
@@ -64,7 +67,7 @@ def main(benchmark, runtime):
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
-	data = open(benchmark+".csv", "w")
+	data = open(benchmark + ".csv", "w")
 	endTime = datetime.now() + timedelta(minutes = int(runtime)) #Set endTime
 	data.write("run\texec\tcrash\t\ttotal:\t")
 	run = 0 #Run counter
@@ -84,13 +87,20 @@ def main(benchmark, runtime):
 			cvg = 0
 		preexecuted = executed
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
-		SIGSEGV = parseEvents(events)
+		SIGSEGV = parseEvents(events, debug)
+
+		#debug.write("run: {run} {executed} {total} {SIGSEGV}\n\n".format(run = run, executed = executed, total = total, SIGSEGV = SIGSEGV))
 
 		#Write data to results
 		if (run == 0): #Print total lines upon discovery
 			data.write("{total}\n".format(total = total))
 		data.write("{run}\t{executed}\t{crash}\n".format(run = run, executed = executed, crash = SIGSEGV))
 		run += 1
+
+	for i in range(0, len(coverage)):
+		if (coverage[i] == "{"):
+			debug.write("\n")
+		debug.write(coverage[i])
 
 if (__name__ == "__main__"):
 	main(sys.argv[1], sys.argv[2])
