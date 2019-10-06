@@ -48,7 +48,7 @@ def main(benchmark, runtime):
 	#Make fuzzer
 	os.chdir(benchDir + "/build")
 	args = ["make"]
-	debug = open("debug_make.txt", "a")
+	debug = open(benchmark+"_debug_make.txt", "w")
 	debug.write("Running make for {}:\n".format(benchmark))
 	proc = subprocess.Popen(args, stdout = debug)
 	proc.wait()
@@ -59,23 +59,30 @@ def main(benchmark, runtime):
 	#Connect to server
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect((HOST, PORT))
-	debug = open("debug_run.txt", "a")
+	debug = open(benchmark+"_debug_run.txt", "w")
 	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
 
 	#Run fuzzer
-	data = open("results.csv", "a")
+	data = open(benchmark+".csv", "w")
 	endTime = datetime.now() + timedelta(minutes = int(runtime)) #Set endTime
 	data.write("run\texec\tcrash\t\ttotal:\t")
 	run = 0 #Run counter
+	cvg = 0
+	preexecuted = 0
 	while datetime.now() < endTime: #Run until timeout
-		proc = subprocess.Popen(["./fuzz.sh"], stdout = PIPE, stderr = PIPE)
+		proc = subprocess.Popen(["./fuzz.sh", str(cvg)], stdout = PIPE, stderr = PIPE)
 		stdout, stderr = proc.communicate()
 		sock.sendall(stdout)
 
 		#Collect data
 		coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
 		(executed, total) = parseCoverage(coverage)
+		if preexecuted < executed :
+			cvg = 1
+		else :
+			cvg = 0
+		preexecuted = executed
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
 		SIGSEGV = parseEvents(events)
 

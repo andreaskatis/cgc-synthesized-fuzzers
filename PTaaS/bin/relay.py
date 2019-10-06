@@ -24,8 +24,8 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        obj      = ['s','p','c','r','q','e'][int(msg['object']) % 6]
-        spec     = ['d','s','e'][int(msg['spec']) % 3]
+        obj = ['s','p','c','r','q','e'][int(msg['object']) % 6]
+        spec = ['d','s','e'][int(msg['spec']) % 3]
         parm     = int(msg['parm'])
         parm     = '{:f}'.format(parm/256.0) if obj == 'c' else '{:d}'.format(parm)
         position = '{x:d}, {y:d}, {z:d}'.format(x=int(msg['position.x']),y=int(msg['position.y']),z=int(msg['position.z']))
@@ -44,17 +44,13 @@ class RELAY():
             msg += '{obj}\n'.format(obj=obj)
         else:
             msg += '{obj}\n'.format(obj=obj)
-        ##
-        ## We don't really want to print/return this .. we want to "send" it somewhere ..
-        ##
+        
         sys.stdout.write(msg)
         sys.stdout.flush()
-        ##self.wsock.send(bytes(msg, 'utf-8'))
-        #return msg
-
+        
 ###############################################################################
 def main():
-    parser = argparse.ArgumentParser(description="PTAAS Relay")
+    parser = argparse.ArgumentParser(description="PTaaS Relay")
     relay = RELAY()
     relay.run()
 

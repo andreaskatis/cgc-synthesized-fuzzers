@@ -1,10 +1,10 @@
-all: libptaas.so
-	cp libptaas.so ../lib/.
+all: lib_PTaaS.so
+	cp lib_PTaaS.so ../lib/.
 	cp sender.py ../bin/.
 	cp relay.py ../bin/.
 
-libptaas.so: ptaas.c wrapper.c
-	$(CC) -fPIC -shared -o libptaas.so ptaas_invalid_all.c wrapper.c
+lib_PTaaS.so: PTaaS.c wrapper.c
+	$(CC) -fPIC -shared -o lib_PTaaS.so PTaaS.c wrapper.c
 
 clean:
-	$(RM) -rf libptaas.so
+	$(RM) -rf lib_PTaaS.so
