@@ -6,7 +6,6 @@ import base64
 import time
 
 ###############################################################################
-
 class c_tuple(Structure):
     _fields_ = [("x" , c_int),
                 ("y" , c_int),
@@ -29,29 +28,24 @@ class c_msg(Structure):
                 ("emission" , c_rgb)
             ]
 
-_libptass = CDLL('../lib/libptaas.so')
+_libptass = CDLL('../lib/lib_PTaaS.so')
 _libptass.step.restype  = c_msg
 
-def cstep():
+def cstep(cvg):
     global _libptass
-    return _libptass.step()
+    return _libptass.step(cvg)
 
 ###############################################################################
-
 class SENDER():
-
     def __init__(self):
         pass
 
-    def run(self):
-        # while True:
-            msg = self.getTestVector()
-            encdmsg = self.processTestVector(msg)
-            time.sleep(0.1)
-            return encdmsg
+    def run(self, cvg):
+        msg = self.getTestVector(cvg)
+        self.processTestVector(msg)
 
-    def getTestVector(self):
-        return cstep()
+    def getTestVector(self, cvg):
+        return cstep(cvg)
 
     def processTestVector(self,struc):
         msg = ""
@@ -71,16 +65,16 @@ class SENDER():
         msg += ' emission.g {}'.format(struc.emission.g)
         msg += ' emission.b {}'.format(struc.emission.b)
         e64 = base64.b64encode(msg.encode()).decode()
-        return e64;
-        # sys.stdout.write(e64 + '\n')
-        # sys.stdout.flush()
+        #return e64;
+        sys.stdout.write(e64 + '\n')
+        sys.stdout.flush()
 
 ###############################################################################
-def main():
-    parser = argparse.ArgumentParser(description="PTAAS Relay")
+def main(cvg):
+    parser = argparse.ArgumentParser(description="PTaaS Relay")
     sender = SENDER()
-    return sender.run()
+    sender.run(int(cvg))
 
 ###############################################################################
 if __name__ == "__main__":
-    sys.exit(main())
+    main(sys.argv[1])
