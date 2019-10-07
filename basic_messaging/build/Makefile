@@ -1,10 +1,10 @@
-all: lib_Basic_Messaging.so
-	cp lib_Basic_Messaging.so ../lib/.
-        cp sender.py ../bin/.
-        cp relay.py ../bin/.
+all: lib_basic_messaging.so
+	cp lib_basic_messaging.so ../lib/.
+	cp sender.py ../bin/.
+	cp relay.py ../bin/.
 
-lib_Basic_Messaging.so: basic_messaging.c wrapper.c
-	$(CC) -fPIC -shared -o lib_Basic_Messaging.so basic_messaging.c wrapper.c
+lib_basic_messaging.so: basic_messaging.c wrapper.c
+	$(CC) -fPIC -shared -o lib_basic_messaging.so basic_messaging.c wrapper.c
 
 clean:
-	$(RM) -rf lib_Basic_Messaging.so
+	$(RM) -rf lib_basic_messaging.so
