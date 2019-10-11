@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from time import sleep
 import os
 import re
 import subprocess
 import socket
 import sys
+import fcntl
 from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 HOST = '0.0.0.0' #The server's hostname or IP address
@@ -26,7 +28,6 @@ def parseCoverage(coverage, debug):
 def parseEvents(events, debug):
 	sigStart = events.find("SIGSEGV")
 	if (sigStart < 0):
-		#debug.write("0\n")
 		return 0
 	else:
 		sigStart += 9 #Move start to start of number
@@ -35,7 +36,6 @@ def parseEvents(events, debug):
 			sigEnd = events.find("}", sigStart)
 
 		SIGSEGV = int(events[sigStart:sigEnd])
-		#debug.write("{SIG}\n".format(SIG = SIGSEGV))
 		return SIGSEGV
 
 def main(benchmark, runtime):
@@ -65,7 +65,6 @@ def main(benchmark, runtime):
 	debug = open(benchmark+"_debug_run.txt", "w")
 	debug.write("Benchmark: {bench}\nPORT: {port}\nSID: {sid}\n\n".format(bench = benchmark, port = PORT, sid = SID))
 	servConnect = "localhost:5000/session/{sid}".format(port = PORT, sid = SID)
-
 	#Run fuzzer
 	data = open(benchmark + ".csv", "w")
 	endTime = datetime.now() + timedelta(minutes = int(runtime)) #Set endTime
@@ -73,11 +72,14 @@ def main(benchmark, runtime):
 	run = 0 #Run counter
 	cvg = 0
 	preexecuted = 0
+	proc1 = subprocess.Popen(['python', '-u', 'sender.py'], stdin = PIPE, stdout = PIPE, stderr = PIPE, shell = False)
+	proc2 = subprocess.Popen(['python', '-u', 'relay.py'], stdin = proc1.stdout, stdout = PIPE, stderr = PIPE, shell = False)
 	while datetime.now() < endTime: #Run until timeout
-		proc = subprocess.Popen(["./fuzz.sh", str(cvg)], stdout = PIPE, stderr = PIPE)
-		stdout, stderr = proc.communicate()
-		sock.sendall(stdout)
+		proc1.stdin.write(bytes(str(cvg)+'\n'))
+		proc1.stdin.flush()
 
+		stdout = proc2.stdout.readline()
+		sock.sendall(stdout)
 		#Collect data
 		coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
 		(executed, total) = parseCoverage(coverage, debug)
@@ -89,13 +91,21 @@ def main(benchmark, runtime):
 		events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
 		SIGSEGV = parseEvents(events, debug)
 
-		#debug.write("run: {run} {executed} {total} {SIGSEGV}\n\n".format(run = run, executed = executed, total = total, SIGSEGV = SIGSEGV))
-
 		#Write data to results
 		if (run == 0): #Print total lines upon discovery
 			data.write("{total}\n".format(total = total))
 		data.write("{run}\t{executed}\t{crash}\n".format(run = run, executed = executed, crash = SIGSEGV))
 		run += 1
+		sleep(0.5)
+	coverage = subprocess.check_output(["curl", "-X", "GET", servConnect + "/coverage"])
+	(executed, total) = parseCoverage(coverage, debug)
+	events = subprocess.check_output(["curl", "-X", "GET", servConnect + "/events"])
+	SIGSEGV = parseEvents(events, debug)
+	data.write("{run}\t{executed}\t{crash}\n".format(run = run, executed = executed, crash = SIGSEGV))
+
+	proc1.terminate()
+	proc2.terminate()
+
 
 	for i in range(0, len(coverage)):
 		if (coverage[i] == "{"):

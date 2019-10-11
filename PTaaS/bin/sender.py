@@ -7,21 +7,21 @@ import time
 
 ###############################################################################
 class c_tuple(Structure):
-    _fields_ = [("x" , c_int),
-                ("y" , c_int),
-                ("z" , c_int)
+    _fields_ = [("x" , c_double),
+                ("y" , c_double),
+                ("z" , c_double)
             ]
 
 class c_rgb(Structure):
-    _fields_ = [("r" , c_int),
-                ("g" , c_int),
-                ("b" , c_int)
+    _fields_ = [("r" , c_double),
+                ("g" , c_double),
+                ("b" , c_double)
             ]
 
 class c_msg(Structure):
-    _fields_ = [("object"   , c_int),
-                ("spec"     , c_int),
-                ("parm"     , c_int),
+    _fields_ = [("object"   , c_double),
+                ("spec"     , c_double),
+                ("parm"     , c_double),
                 ("position" , c_tuple),
                 ("vector"   , c_tuple),
                 ("color"    , c_rgb),
@@ -49,32 +49,34 @@ class SENDER():
 
     def processTestVector(self,struc):
         msg = ""
-        msg += ' object {}'.format(struc.object)
-        msg += ' spec {}'.format(struc.spec)
-        msg += ' parm {}'.format(struc.parm)
-        msg += ' position.x {}'.format(struc.position.x)
-        msg += ' position.y {}'.format(struc.position.y)
-        msg += ' position.z {}'.format(struc.position.z)
-        msg += ' vector.x {}'.format(struc.vector.x)
-        msg += ' vector.y {}'.format(struc.vector.y)
-        msg += ' vector.z {}'.format(struc.vector.z)
-        msg += ' color.r {}'.format(struc.color.r)
-        msg += ' color.g {}'.format(struc.color.g)
-        msg += ' color.b {}'.format(struc.color.b)
-        msg += ' emission.r {}'.format(struc.emission.r)
-        msg += ' emission.g {}'.format(struc.emission.g)
-        msg += ' emission.b {}'.format(struc.emission.b)
+        msg += ' object {}'.format(int(round(struc.object)))
+        msg += ' spec {}'.format(int(round(struc.spec)))
+        msg += ' parm {}'.format(int(round(struc.parm)))
+        msg += ' position.x {}'.format(int(round(struc.position.x)))
+        msg += ' position.y {}'.format(int(round(struc.position.y)))
+        msg += ' position.z {}'.format(int(round(struc.position.z)))
+        msg += ' vector.x {}'.format(int(round(struc.vector.x)))
+        msg += ' vector.y {}'.format(int(round(struc.vector.y)))
+        msg += ' vector.z {}'.format(int(round(struc.vector.z)))
+        msg += ' color.r {}'.format(int(round(struc.color.r)))
+        msg += ' color.g {}'.format(int(round(struc.color.g)))
+        msg += ' color.b {}'.format(int(round(struc.color.b)))
+        msg += ' emission.r {}'.format(int(round(struc.emission.r)))
+        msg += ' emission.g {}'.format(int(round(struc.emission.g)))
+        msg += ' emission.b {}'.format(int(round(struc.emission.b)))
         e64 = base64.b64encode(msg.encode()).decode()
         #return e64;
         sys.stdout.write(e64 + '\n')
         sys.stdout.flush()
 
 ###############################################################################
-def main(cvg):
-    parser = argparse.ArgumentParser(description="PTaaS Relay")
-    sender = SENDER()
-    sender.run(int(cvg))
+def main():
+    while True :
+        line = sys.stdin.readline()
+        parser = argparse.ArgumentParser(description="PTaaS Relay")
+        sender = SENDER()
+        sender.run(line)
 
 ###############################################################################
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main()

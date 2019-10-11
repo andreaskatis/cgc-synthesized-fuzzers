@@ -3,27 +3,27 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <time.h>
+#include <stdio.h>
 typedef struct msg {
-	int command;
-	int size;
-	int deck[127];
+	double command;
+	double size;
+	double deck[127];
+	double snd;
 } msg_t;
 
 extern double generateRandomValue(_Bool lflag, _Bool uflag, double lbound, double ubound) {
-  if (lbound == 0 && ubound == 0) {
+  if (lbound == 0 && ubound == 0 && !lflag && !uflag) {
     return (double) rand();
   } else {
       double min = lflag ? lbound : lbound+0.001;
       double max = uflag ? ubound : ubound-0.001;
       double range = max - min;
-      // int s;
-      // syscall(SYS_getrandom, &s, sizeof(int), 1);
       double rnd = ((double) rand())/(1.0 + ((double) RAND_MAX));
       double value = ((double) (((double) range)*rnd));
-      // printf("Lflag : %d, Uflag : %d, Lbound : %f, Ubound : %f, Value : %f\n", lflag, uflag, lbound, ubound, value+min);
       return value + min;
   }
 }
+
 extern double generateRandomValueExcl(double excl1, _Bool lflag, _Bool uflag, double lbound, double ubound) {
   double min = (lflag && excl1 != lbound) ? lbound : lbound+0.001;
   double max = (uflag && excl1 != ubound) ? ubound : ubound-0.001;
@@ -37,47 +37,18 @@ extern double generateRandomValueExcl(double excl1, _Bool lflag, _Bool uflag, do
     if (res == excl1) {
       generateRandomValueExcl(excl1, lflag, uflag, min, max);
     } else {
-      // printf("Excl1 : %f, Lflag : %d, Uflag : %d, Lbound : %f, Ubound : %f, Value : %f\n", excl1, lflag, uflag, lbound, ubound, res);
       return res;
     }
   }
 }
 
-msg_t step(_Bool cvrg) {
+msg_t step(_Bool cvrg){
 	srand(time(NULL));
 	cvg[0] = cvrg;
 	updateFunction();
 	msg_t msg;
-	msg.command   = option[0];
 	msg.size      = deck_size[0];
-	msg.deck[0]   = c1[0];
-	msg.deck[1]   = c2[0];
-	msg.deck[2]   = c3[0];
-	msg.deck[3]   = c4[0];
-	msg.deck[4]   = c5[0];
-	msg.deck[5]   = c6[0];
-	msg.deck[6]   = c7[0];
-	msg.deck[7]   = c8[0];
-	msg.deck[8]   = c9[0];
-	msg.deck[9]   = c10[0];
-	msg.deck[10]  = c11[0];
-	msg.deck[11]  = c12[0];
-	msg.deck[12]  = c13[0];
-	msg.deck[13]  = c14[0];
-	msg.deck[14]  = c15[0];
-	msg.deck[15]  = c16[0];
-	msg.deck[16]  = c17[0];
-	msg.deck[17]  = c18[0];
-	msg.deck[18]  = c19[0];
-	msg.deck[19]  = c20[0];
-	msg.deck[20]  = c21[0];
-	msg.deck[21]  = c22[0];
-	msg.deck[22]  = c23[0];
-	msg.deck[23]  = c24[0];
-	msg.deck[24]  = c25[0];
-	msg.deck[25]  = c26[0];
-	msg.deck[26]  = c27[0];
-	msg.deck[27]  = c28[0];
+	msg.command   = option[0];
 	msg.deck[28]  = c29[0];
 	msg.deck[29]  = c30[0];
 	msg.deck[30]  = c31[0];
@@ -150,32 +121,40 @@ msg_t step(_Bool cvrg) {
 	msg.deck[97]  = c98[0];
 	msg.deck[98]  = c99[0];
 	msg.deck[99]  = c100[0];
-	msg.deck[100] = c101[0];
-	msg.deck[101] = c102[0];
-	msg.deck[102] = c103[0];
-	msg.deck[103] = c104[0];
-	msg.deck[104] = c105[0];
-	msg.deck[105] = c106[0];
-	msg.deck[106] = c107[0];
-	msg.deck[107] = c108[0];
-	msg.deck[108] = c109[0];
-	msg.deck[109] = c110[0];
-	msg.deck[110] = c111[0];
-	msg.deck[111] = c112[0];
-	msg.deck[112] = c113[0];
-	msg.deck[113] = c114[0];
-	msg.deck[114] = c115[0];
-	msg.deck[115] = c116[0];
-	msg.deck[116] = c117[0];
-	msg.deck[117] = c118[0];
-	msg.deck[118] = c119[0];
-	msg.deck[119] = c120[0];
-	msg.deck[120] = c121[0];
-	msg.deck[121] = c122[0];
-	msg.deck[122] = c123[0];
-	msg.deck[123] = c124[0];
-	msg.deck[124] = c125[0];
-	msg.deck[125] = c126[0];
-	msg.deck[126] = c127[0];
+	msg.deck[100]   = c101[0];
+	msg.deck[101]   = c102[0];
+	msg.deck[102]   = c103[0];
+	msg.deck[103]   = c104[0];
+	msg.deck[104]   = c105[0];
+	msg.deck[105]   = c106[0];
+	msg.deck[106]   = c107[0];
+	msg.deck[107]   = c108[0];
+	msg.deck[108]   = c109[0];
+	msg.deck[109]   = c110[0];
+	msg.deck[110]  = c111[0];
+	msg.deck[111]  = c112[0];
+	msg.deck[112]  = c113[0];
+	msg.deck[113]  = c114[0];
+	msg.deck[114]  = c115[0];
+	msg.deck[115]  = c116[0];
+	msg.deck[116]  = c117[0];
+	msg.deck[117]  = c118[0];
+	msg.deck[118]  = c119[0];
+	msg.deck[119]  = c120[0];
+	msg.deck[120]  = c121[0];
+	msg.deck[121]  = c122[0];
+	msg.deck[122]  = c123[0];
+	msg.deck[123]  = c124[0];
+	msg.deck[124]  = c125[0];
+	msg.deck[125]  = c126[0];
+	msg.deck[126]  = c127[0];
+	msg.snd = snd[0];
 	return msg;
 }
+
+// void main(_Bool cvg) {
+// 	while(1) {
+//   step();
+// }
+//   return;
+// }

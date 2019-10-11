@@ -6,17 +6,16 @@
 #include <stdio.h>
 
 typedef struct genStr {
-  int length;
-  int chas[1];
+  double chas[1];
 } genStr_t;
 
 typedef struct msg {
-  int main;
+  double main;
   genStr_t string;
-  int index1;
-  int index2;
-  int user;
-  int messID;
+  double index1;
+  double index2;
+  double user;
+  double messID;
 } msg_t;
 
 extern double generateRandomValue(_Bool lflag, _Bool uflag, double lbound, double ubound) {
@@ -63,3 +62,11 @@ msg_t step(_Bool cvrg) {
   msg.messID          = messID[0];
   return msg;
 }
+
+// void main (_Bool cvrg) {
+//   while(1) {
+//     step(cvrg);
+//     sleep(1);
+//   }
+//   return;
+// }

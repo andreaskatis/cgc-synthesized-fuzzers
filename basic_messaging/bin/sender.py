@@ -7,16 +7,16 @@ import time
 
 ###############################################################################
 class c_genStr(Structure):
-    _fields_ = [("chas"   , c_int)
-    		]
+    _fields_ = [("chas"   , c_double)
+            ]
 
 class c_msg(Structure):
-    _fields_ = [("main"   , c_int),
+    _fields_ = [("main"   , c_double),
                 ("genStr" , c_genStr),
-                ("index1" , c_int),
-                ("index2" , c_int),
-                ("user"   , c_int),
-                ("id"     , c_int)
+                ("index1" , c_double),
+                ("index2" , c_double),
+                ("user"   , c_double),
+                ("id"     , c_double)
             ]
 
 _lib_basic_messaging = CDLL('../lib/lib_basic_messaging.so')
@@ -40,25 +40,31 @@ class SENDER():
         return cstep(cvg)
 
     def processTestVector(self,struc):
-        genStr = chr(int(struc.genStr.chas))
+        val = int(round(struc.genStr.chas))
+        if 0 <= val <= 127 :
+            genStr = chr(val)
+        else :
+            genStr = str(val)
         msg = ""
-        msg += " main {}".format(struc.main)
+        msg += " main {}".format(int(round(struc.main)))
         msg += " genStr {}".format(genStr)
-        msg += " index1 {}".format(struc.index1)
-        msg += " index2 {}".format(struc.index2)
-        msg += " user {}".format(struc.user)
-        msg += " id {}".format(struc.id)
+        msg += " index1 {}".format(int(round(struc.index1)))
+        msg += " index2 {}".format(int(round(struc.index2)))
+        msg += " user {}".format(int(round(struc.user)))
+        msg += " id {}".format(int(round(struc.id)))
 
         e64 = base64.b64encode(msg.encode()).decode()
         sys.stdout.write(e64 + '\n')
         sys.stdout.flush()
 
 ###############################################################################
-def main(cvg):
-    parser = argparse.ArgumentParser(description="basic_messaging Relay")
-    sender = SENDER()
-    sender.run(cvg)
+def main():
+    while True:
+        line = sys.stdin.readline()
+        parser = argparse.ArgumentParser(description="basic_messaging Relay")
+        sender = SENDER()
+        sender.run(line)
 
 ###############################################################################
 if __name__ == "__main__":
-	main(sys.argv[1])
+    main()

@@ -10,17 +10,15 @@ Note that there is some unexpected behavior when submitting deck size. When read
 
 ## Vulnerabilities
 A_Game_of_Chance has one vulnerability
-1. Players determine what amount they bet based on pointers to a flag page, a collection of bytes that is meant to be kept secret. However, the players move their flag page pointers in a predictable fashion based on whether they won or lost the round. Because of this, a malicious user is able to keep track of players individual bets (ie, the indices of the flag page) in order to eventually build a complete picture of the flag page, constituting an information leakage vulnerability. Note: At no point does the application crash.
+1. Players determine what amount they bet based on pointers to a flag page, a collection of bytes that is meant to be kept secret. However, the players move their flag page pointers in a predictable fashion based on whether they won or lost the round. Because of this, a malicious user is able to keep track of players individual bets (ie, the indices of the flag page) in order to eventually build a complete picture of the flag page, constituting an information leakage vulnerability.
 
 ## Fuzzer information
 The fuzzer sends 129 ints, which the relay then converts into a readable expression for the application. The usage and expected ranges for the generated ints are as follows:
 
     Variable Name       Usage                                                   Expected Range      	Instances
-    cmd                 Represents which command to send to the application     [0, 4]			1
-    size                Represents the size of the deck                         [1, 127]		1
-    card                Represents a card in the deck                           [0, 8]			127
-
-The card value range is limited to [0, 8] instead of the [2, 10] that the application expects to simplify processing in the relay.
+    cmd                 Represents which command to send to the application     [0, 5]					1
+    size                Represents the size of the deck                         [1, 127]				1
+    card                Represents a card in the deck                           [2, 10]					127
 
 The relay then takes these variables and sends a predefined command to the application.
 
@@ -28,7 +26,7 @@ The relay then takes these variables and sends a predefined command to the appli
     If the command corresponds to anything other than new deck, the relay will simply send the command by itself.
 
 ## Running the fuzzer
-The fuzzer files must be named agameofchance.c in order to build properly.
+The fuzzer files must be named A_Game_of_Chance.* in order to build properly.
 
 Run the make file found in the build folder.
 

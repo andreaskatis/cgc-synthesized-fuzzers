@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import sys
 from sys import stdin
 import argparse
@@ -9,12 +10,12 @@ class RELAY():
     def __init__(self):
         pass
 
-    def run(self):
-        msg = self.getTestVector()
+    def run(self, payload):
+        msg = self.getTestVector(payload)
         self.processTestVector(msg)
 
-    def getTestVector(self):
-        payload = stdin.readline()
+    def getTestVector(self, payload):
+        # payload = stdin.readline()
         #payload = fuzzdata
         un64 = base64.b64decode(payload.encode()).decode()
         pairlist = un64.split()
@@ -24,8 +25,10 @@ class RELAY():
         return alist
 
     def processTestVector(self,msg):
-        obj = ['s','p','c','r','q','e'][int(msg['object']) % 6]
-        spec = ['d','s','e'][int(msg['spec']) % 3]
+        msgobj = int(msg['object'])
+        msgspec = int(msg['spec'])
+        obj = (['s','p','c','r','q'][msgobj % 5]) if (0 <= msgobj <= 5) else str(msgobj)
+        spec = (['d','s'][msgspec % 2]) if (0 <= msgspec <= 1) else str(msgspec)
         parm     = int(msg['parm'])
         parm     = '{:f}'.format(parm/256.0) if obj == 'c' else '{:d}'.format(parm)
         position = '{x:d}, {y:d}, {z:d}'.format(x=int(msg['position.x']),y=int(msg['position.y']),z=int(msg['position.z']))
@@ -50,9 +53,11 @@ class RELAY():
         
 ###############################################################################
 def main():
-    parser = argparse.ArgumentParser(description="PTaaS Relay")
-    relay = RELAY()
-    relay.run()
+    while True :
+        line = sys.stdin.readline()
+        parser = argparse.ArgumentParser(description="PTaaS Relay")
+        relay = RELAY()
+        relay.run(line)
 
 ###############################################################################
 if __name__ == "__main__":
