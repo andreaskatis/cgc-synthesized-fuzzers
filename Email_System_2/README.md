@@ -18,8 +18,7 @@ The fuzzer sends 206 ints, which the relay then converts into a useable message 
 
     Variable Name       Usage                                                       Expected Range      Instances
     main                Represent which main command to send                        [1, 3]              1
-    length              Limits the length of the generated strings                  [1, 100]            2
-    cha                 Represents chars using ASCII conversion                     [32, 126]           200
+    cha                 Represents chars using ASCII conversion                     [32, 126]           15
     index               Refers to an index in the user array                        [0, +∞)             2
     flag                Flags whether or not to give a valid password upon login    [0, 1]              1
     user                Represent which user command to send                        [1, 8]              1
@@ -44,6 +43,6 @@ The relay always starts by sending main as the initial command
     If main == 3: Clear the username and password arrays
 
 ## Running the fuzzer
-The fuzzer files must be named email_system_2.c in order to build properly.
+The fuzzer files must be named Email_System_2.c in order to build properly.
 Run the make file found in the build folder.
 Once the build process is complete, run fuzz.sh in the bin folder.

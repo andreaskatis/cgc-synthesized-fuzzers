@@ -11,16 +11,16 @@ Palindrome has one vulnerability.
 1. The application reads in the given string into a 64-byte buffer, meaning it can process 128 chars at once. However, there are no checks in place to ensure that the given string is less than or equal to 128 chars. If the given string exceeds that (>128 chars), the application experiences a buffer overflow and crashes.
 
 ## Fuzzer information
-The fuzzer sends 201 ints, which the relay then converts into an expression readable by the application. The usage and expected ranges of the generated ints are as follows:
+The fuzzer begins with the empty string, changing it with each new test considering three available options. The first option adds a new random character to the string at a random location. The second option changes an existing character to random one, at a random location. Finally, the third option deletes a character at a random location.
 
     Variable Name       Usage                                           Expected Range      Instances
-    length              Limits the length of the string                 [1, 200]            1
-    cha                 Represents the chars using ASCII conversion     [32, 126]           200
+    cha              	chosen ASCII character			                [32, 126]            1
+    option              add/change/remove character     				[1, 3]           	 1
+    location			location of character in string					[0, +∞]				 1
 
-The relay then takes these values, creates a string 200 chas long and truncates it to the length given by the fuzzer before sending it to the application.
 
 ## Running the fuzzer
-The fuzzer files must be named palindrome.c in order to build properly.
+The fuzzer files must be named Palindrome.c in order to build properly.
 
 Run the make file found in the build folder.
 

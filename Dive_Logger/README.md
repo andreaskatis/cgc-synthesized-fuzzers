@@ -14,16 +14,16 @@ Dive_Logger has two vulnerabilities:
 2. Time values for dives are entered as a string in the format "hr:mn:sc" before being processed and sanitized. The application checks the upper bound of the time value, but has no checks for the lower bound, meaning even extremely large negative values for time are considered valid. The application then stores the time in a string buffer of a fixed size. If the time values are large enough (all three values are negative integers having at least eight digits), the string buffer will overflow and the application will crash.
 
 ## Fuzzer information
-The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
+The fuzzer sends 71 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
 
     Variable Name       Usage                                       Expected Range      Instances
     main                Represents the main command                 [0,7]               1
     length              Limits the length of strings                [1, 100]            5
-    cha                 Represents chars based on ASCII conversion  [32, 126]           500
+    cha                 Represents chars based on ASCII conversion  [32, 126]           25
     month               Represents the month                        [1, 12]             1
     day                 Represents the day                          [1, 31]             1
     year                Represents the year                         [1950, 2050]        1
-    genericIn           Represents various input values             unconstrained       9 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
+    genericIn           Represents various input values             unconstrained       1 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
     time                Represents a time value                     unconstrained       3
     hexVal              Represents a hex value                      [0, 255]            32
     index               Represents the dive index                   [1, 20]             1

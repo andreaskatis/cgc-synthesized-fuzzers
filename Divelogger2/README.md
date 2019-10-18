@@ -13,16 +13,15 @@ Divelogger2 has one vulnerabilities:
 1. When executing download dive, the application stores the hex values given into a static array of fixed size. However, the array length isn't checked, allowing the user to overflow the array, which crashes the application.
 
 ## Fuzzer information
-The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
+The fuzzer sends 66 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
 
     Variable Name       Usage                                       Expected Range      Instances
     main                Represents the main command                 [0,7]               1
-    length              Limits the length of strings                [1, 100]            5
-    cha                 Represents chars based on ASCII conversion  [32, 126]           500
+    cha                 Represents chars based on ASCII conversion  [32, 126]           25
     month               Represents the month                        [1, 12]             1
     day                 Represents the day                          [1, 31]             1
     year                Represents the year                         [1950, 2050]        1
-    genericIn           Represents various input values             unconstrained       9 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
+    genericIn           Represents various input values             unconstrained       1 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
     time                Represents a time value                     unconstrained       3
     hexVal              Represents a hex value                      [0, 255]            32
     index               Represents the dive index                   [1, 20]             1
@@ -35,6 +34,6 @@ Due to the large amount of varying input the application requires for each diffe
     If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
 
 ## Running the fuzzer
-The fuzzer files must be named divelogger2.c in order to build properly.
+The fuzzer files must be named Divelogger2.c in order to build properly.
 Run the make file found in the build folder.
 Once the build process is complete, run fuzz.sh in the bin folder.

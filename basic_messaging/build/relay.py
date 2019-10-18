@@ -14,9 +14,6 @@ class RELAY():
     def run(self, payload):
         msg = self.getTestVector(payload)
         self.processTestVector(msg)
-    # def run(self, usernames):
-    #     msg = self.getTestVector()
-    #     self.processTestVector(msg, usernames)
 
     def getTestVector(self, payload):
         un64 = base64.b64decode(payload.encode()).decode()

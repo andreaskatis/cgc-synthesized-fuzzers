@@ -12,16 +12,15 @@ Material_Temperature_Simulation has two vulnerabilities.
 2. Normally, thermal conductivity is expected to be positive. However, there is no check to confirm this when creating a custom material, allowing the user to input negative thermal conductivities. This causes heat to flow from lower heat values to higher heat values, an impossibility in real world physics. The application also limits the heat of a specific material to 373 degrees Celsius. However, because of the previous exploit, the temperature in a specific area of a custom material can rise above 373 degrees Celsius, crashing the application.
 
 ## Fuzzer information
-The fuzzer sends 225 ints, which the relay then converts into a useable expression for the application. The usage and expected ranges for the generated ints are as follows:
+The fuzzer sends 10 ints, which the relay then converts into a useable expression for the application. The usage and expected ranges for the generated ints are as follows:
 
     Variable Name       Usage                                                                               Expected Range      Instances
     material            Represents initial material choice                                                  [1, 4]              1
-    capInitial          Represents the initial value for the thermal/heat capacities                        Unconstrained       2
-    capModifier         Used as a modifier to generate the remaining values for thermal/heat capacities     [75, 125]           14
+    capInitial          Represents the initial value for the thermal/heat capacities                        Unconstrained       1
+    capModifier         Used as a modifier to generate the remaining values for thermal/heat capacities     [75, 125]           1
     dimension           Represents the x, y, and z dimensions of the material                               [1, 15]             3
     flag                Flags y/n for the isothermic/constant energy source choice                          [0, 1]              2
-    length              Limits the amount of temperature values to send                                     [1, 100]            2
-    temp                Represents a single temperature value                                               [-172, 373]         200
+    temp                Represents a single temperature value                                               [-172, 373]         1
     runtime             How long to run the simulation for                                                  [1, 10000]          1
 
 Due to the restrictions on thermal and heat capacities, the relay takes the initial seed value for each and then multiplies them by the modifiers (converted to percentage values) to get the other seven values needed by the application.
@@ -31,13 +30,13 @@ Due to the restrictions on thermal and heat capacities, the relay takes the init
     The relay then sends the dimensions of the material in x,y,z format.
     The relay then sends y/n based on the isothermic flag (0 = y, 1 = n).
         If yes, the relay only sends the first temperature value.
-        If no, the relay sends the first n temperature values, where n is a generated number between 1 and 100 provided by the fuzzer.
+        If no, the relay populates the material grid with values provided by the fuzzer.
     The relay then sends y/n based on the isothermic flag (0 = y, 1 = n).
-        If yes, the relay sends the first n temperature values, where n is a generated number between 1 and 100 provided by the fuzzer.
+        If yes, the relay propulates the material grid with values provided by the fuzzer.
         If no, the relay sends nothing.
     The relay finally sends the runtime, and sends a newline command runtime / 10 times.
 
 ## Running the fuzzer
-The fuzzer files must be named material_temperature_simulation.c in order to build properly.
+The fuzzer files must be named Material_Temperature_Simulation.c in order to build properly.
 Run the make file found in the build folder.
 Once the build process is complete, run fuzz.sh in the bin folder.

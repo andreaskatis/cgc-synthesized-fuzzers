@@ -1,5 +1,5 @@
-## Dive_Logger fuzzer
-https://github.com/tra-ilofbits/cb-multios/tree/master/challenges/SCUBA_Dive_Logging
+## SCUBA_Dive_Logging fuzzer
+https://github.com/trailofbits/cb-multios/tree/master/challenges/SCUBA_Dive_Logging
 
 ## Application information
 SCUBA_Dive_Logging provides an interface for a single diver to record both information about themself and information on the various dives that they have performed. SCUBA_Dive_Logging also allows the user to download, edit, print, and remove dive logs.
@@ -14,16 +14,15 @@ SCUBA_Dive_Logging has two vulnerabilities:
 2. When dive data is downloaded, samples (consisting of a timestamp and depth) are collected into a linked list. The timestamp values are used to allocate an array. The linked list is then passed through again and the values of the sample are used to calculate where in the array they should be placed. However, these values are not sanitized, which means that a corrupted value may be allocated outside of the array, which will crash the application.
 
 ## Fuzzer information
-The fuzzer sends 556 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
+The fuzzer sends 66 ints, which the relay then converts into an expression suitable for the application. The usage and expected ranges for the generated integers are as follows:
 
     Variable Name       Usage                                       Expected Range      Instances
     main                Represents the main command                 [0,7]               1
-    length              Limits the length of strings                [1, 100]            5
-    cha                 Represents chars based on ASCII conversion  [32, 126]           500
+    cha                 Represents chars based on ASCII conversion  [32, 126]           25
     month               Represents the month                        [1, 12]             1
     day                 Represents the day                          [1, 31]             1
     year                Represents the year                         [1950, 2050]        1
-    genericIn           Represents various input values             unconstrained       9 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
+    genericIn           Represents various input values             unconstrained       1 (ZIP, phone, PADINum, maxDep, avgDep, durat, O2, PSIIn, PSIOut)
     time                Represents a time value                     unconstrained       3
     hexVal              Represents a hex value                      [0, 255]            32
     index               Represents the dive index                   [1, 20]             1
@@ -36,6 +35,6 @@ Due to the large amount of varying input the application requires for each diffe
     If main is 3 (edit dives), 4 (print dive), or 5 (remove dive), the relay sends the index value. If edit dives was selected, the relay then acts as though log new dive had been selected.
 
 ## Running the fuzzer
-The fuzzer files must be named scuba_dive_logging.c in order to build properly.
+The fuzzer files must be named SCUBA_Dive_Logging.c in order to build properly.
 Run the make file found in the build folder.
 Once the build process is complete, run fuzz.sh in the bin folder.
