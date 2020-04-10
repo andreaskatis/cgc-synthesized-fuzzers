@@ -1,0 +1,42 @@
+AFL/aflfast Commands:
+See https://lcamtuf.coredump.cx/afl/ for more detailed information on AFL, its usage, and its other use cases/abilities
+
+Building AFL:
+$git clone https://github.com/google/AFL
+$cd AFL
+$make -j
+$cd llvm_mode
+$LLVM_CONFIG=llvm-config-6.0 CXX=g++ CC=clang make
+$cd ..
+$make install
+Notes: llvm_mode is not strictly necessary, allows minorly improved compiler optimizations and the use of persistence mode
+	To build aflfast, clone https://github.com/mboehme/aflfast and build as above
+
+Compiling cb-multios with AFL:
+Navigate to /cb-multios/
+$CC=/PATH/TO/AFL/afl-clang CXX=/PATH/TO/AFL/afl-clang++ ./build.sh
+Notes: Certain challenges error out when being built via AFL. Removing these from /cb-multios/challenges/ will allow AFL to build the rest without issue
+	In order to compile other binaries, simply replace ./build.sh with the standard command to build it (eg make or gcc app.c)
+
+Running AFL:
+Navigate to /AFL/
+$./afl-fuzz -o /PATH/TO/FINDINGS/ -i /PATH/TO/TESTCASES/ -- /PATH/TO/BUILT/BINARY/
+Notes: The findings and testcases folders are user defined directories where AFL outputs to and takes input from, respectively
+	AFL outputs data into findings primarily in the form of textfiles which contain fuzzing inputs that AFL wants to try
+	AFL expects there to be some initial input in the testcases folder with which to begin the fuzzing process. This is some initial input or collection of standadrd inputs to the application that exercises its functionality
+
+
+afl-cov Commands:
+In order to work, two flags must be added during the build process: -fprofile-arcs and -ftest-coverage
+For cb-multios, open cb-multios/CMakeLists.txt and add the above flags to add_compile_options in else(WIN32) around line 50
+	Additionally, add "-lgcov --coverage" under set(CMAKE_EXE_LINKER_FLAGS) and set(CMAKE_SHARED_LINKER_FLAGS) which are just under add_compile_options
+Once the flags are added, build the binary as normal with AFL
+
+Using afl-cov over AFL results:
+Navigate to /afl-cov/
+./afl-cov --enable-branch-coverage -d /PATH/TO/FINDINGS --coverage-cmd "cat AFL_FILE | LD_LIBRARY_PATH=/PATH/TO/LIBRARIES/ /PATH/TO/BUILT/BINARY" -c /PATH/TO/BINARY/FOLDER/
+Notes: Findings is the same user defined folder which AFL outputs to
+	/PATH/TO/LIBRARIES/ is any libraries which the binary needs to be normally run. For example, for cb-multios this should be /PATH/TO/CB-MULTIOS/build/include/
+	/PATH/TO/BUILT/BINARY is the path to the binary exe, whereas /PATH/TO/BINARY/FOLDER/ is the folder containing the built binary. For example, if one wanted to run afl-cov over /usr/Desktop/a.out, /PATH/TO/BUILT/BINARY should be /usr/Desktop/a.out while /PATH/TO/BINARY/FOLDER/ should be /usr/Desktop/
+
+Once afl-cov is finished running, all results are stored in /PATH/TO/FINDINGS/cov. A visual summary of the coverage results can be found in /cov/web/index.html
