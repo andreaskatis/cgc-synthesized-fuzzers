@@ -29,15 +29,51 @@ User_Manager has 1 vulnerability.
 1. A user's unread messages are tracked via linked list. Each user stores a pointer to the initial unread message, which then links to the remainder of the unread messages. However, a user can delete the first message in the list without reading it, causing a use-after-free error when the user next tries to read a message. Note that this does not appear to crash the application.
 
 ## Fuzzer Information
-We decided not to use this application originally, so I don't have a specific fuzzer specification. However, it should work almost identically to the Email_System_2 fuzzer. Below is a cursory list of the required fuzzing variables along with a basic outline of how the fuzzer should work.
+The fuzzer sends 7 ints, which the relay then converts into a useable message for the application. The use and expected ranges for the generated ints are as follows:
 
-	Variable Name	Usage
-	main		Represents which main command to send
-	username	Represents a randomized username (likely a single random cha or a randomized str)
-	password	Represents a randomized password (same process as username)
-	flag		Whether or not to send valid input to login prompts
-	userIdx		Which user to log in upon successful login flag
-	cmd		Represents which user/admin command to send in the event that we log into admin/user menus
-	index		Represents an index for the various prompts which require one (such as send message or delete message)
+	Variable Name	Usage								Expected Range	Instances
+	main		Represents which main command to send				[1, 4]		1
+	username	Single randomized cha using ASCII conversion			[32, 126]	1
+	password	Single randomized cha using ASCII conversion			[32, 126]	1
+	flag		Whether or not to send valid input to login prompts		[0, 1]		1
+	userIdx		Which user to log in upon successful login flag			[0, +∞)		1
+	cmd		Represents which user/admin command to send			[0, 11]		1
+	index		Represents an index for the various prompts which require one	[0, +∞)		1
 
-Similarly to Email_System_2, the relay will need to keep an array of usernames and their corresponding passwords to refer to when fuzzing the application.
+Similarly to Email_System_2, the relay will need to keep an array of usernames and their corresponding passwords to refer to when fuzzing the application. Because of this, the relay uses a modulo function to limit the index values to userArr.len + 1.
+
+The relay always starts by sending main as the initial command
+	If main == 1: Send the generated username/password and update the corresponding arrays
+	If main == 2:
+		If userIdx > userArr.length: Send the generated username/password (invalid login)
+		Else: Send the username associated with the given index
+			If flag == 1: Send the generated password (invalid login)
+			Else: Send the password associated with the given index (valid login)
+				Send cmd % 6 + 1 for the user menu choices
+				If cmd == 1:
+					If index > userArr.length: Send the generated username (invalid recipient)
+					Else: Send the username associated with the index
+					      Send the generated password as the message
+					Logout
+				If cmd == 2 or 4: Pass index as the message ID and logout
+				If cmd == 3: Do nothing and logout
+				If cmd == 5: Do nothing (command already logs out)
+				If cmd == 6: Clear the username/password arrays
+	If main == 3:
+		If flag == 1: Send the generated password (invalid admin login)
+		Else: Send "$admin$77" (valid admin login)
+			Send cmd % 4 + 1 for the admin menu choices
+			If cmd == 1: Do nothing and logout
+			If cmd == 2:
+				If index > userArr.length: Send the generated username (invalid user)
+				Else: Send the username associated with the given index
+				      Remove the associated username/password from their list
+				Logout
+			If cmd == 3:
+				If index > userArr.length: Send the generated username (invalid user)
+				Else: Send the username associated with the given index
+				      Send the generated password
+				      Update the password associated with the given index to be the new password
+				Logout
+			If cmd == 4: Do nothing (command already logs out)
+	If main == 4: Clear the username/password arrays
