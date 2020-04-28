@@ -13,7 +13,7 @@ Basic_Messaging has one vulnerability.
 1. Whenever one logs into an account, all unread messages are displayed. If the number of unread messages exceeds 255, the application crashes.
 
 ## Fuzzer information
-The fuzzer sends 106 ints, which the relay then converts into a readable expression for the application. The use and expected ranges for the generated ints are as follows:
+The fuzzer sends 5 ints, which the relay then converts into a readable expression for the application. The use and expected ranges for the generated ints are as follows:
 
     Variable Name       Usage                                       Expected Range      Instances
     main                Represent which main command to send        [1, 3]              1
