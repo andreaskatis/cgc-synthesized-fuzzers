@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <time.h>
+#include <stdio.h>
 
 typedef struct msg {
   double mainC;
@@ -60,3 +61,11 @@ msg_t step(_Bool cvrg) {
   msg.indx    = indx[0];
   return msg;
 }
+
+// void main(_Bool cvg) {
+//  while(1) {
+//   step(0);
+//   printf("%f\n", mainC[0]);
+// }
+//   return;
+// }
