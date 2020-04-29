@@ -64,7 +64,7 @@ msg_t step(_Bool cvrg) {
 
 // void main(_Bool cvg) {
 //  while(1) {
-//   step(0);
+//   step(1);
 //   printf("%f\n", mainC[0]);
 // }
 //   return;

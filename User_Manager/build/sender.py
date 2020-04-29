@@ -34,7 +34,7 @@ class SENDER():
         time.sleep(0.1)
 
     def getTestVector(self, cvg):
-        return cstep(0)
+        return cstep(1)
 
     def processTestVector(self,struc):
         msg = ""
