@@ -162,7 +162,6 @@ def main():
         parser = argparse.ArgumentParser(description="User_Manager Relay")
         relay = RELAY()
         relay.run(line)
-
 ###############################################################################
 if __name__ == "__main__":
     main()
