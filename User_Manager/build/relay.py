@@ -26,14 +26,14 @@ class RELAY():
 
     def processTestVector(self,msg):
         global usernames, passwords
-        print(msg)
         mainC = int(msg["mainC"])
         username = chr(int(msg["username"]))
         password = chr(int(msg["password"]))
         flag = int(msg["flag"])
-        userIdx = int(msg["userIdx"]) % (len(usernames) + 1)
+
+        userIdx = int(msg["userIdx"]) % (len(usernames)) if len(usernames) > 0 else 0
         cmd = int(msg["cmd"])
-        indx = int(msg["indx"]) % (len(usernames) + 1)
+        indx = int(msg["indx"]) % (len(usernames)) if len(usernames) > 0 else 0
 
         msg = ""
         msg = "{mainC}\n".format(mainC = mainC)
@@ -163,8 +163,8 @@ def main():
         parser = argparse.ArgumentParser(description="User_Manager Relay")
         relay = RELAY()
         relay.run(line)
-        print("USERNAMES : " + str(usernames))
-        print("passwords : " + str(passwords))
+        # print("USERNAMES : " + str(usernames))
+        # print("passwords : " + str(passwords))
 ###############################################################################
 if __name__ == "__main__":
     main()
